@@ -9,13 +9,19 @@ use PHPUnit\Framework\MethodTest\ClassGenerator;
 
 class MethodTest
 {
+    private $classPrefix = 'MethodTest_';
+
     private $className = null;
+
+    private $methodTestClassName = null;
 
     private $vars = array();
 
     private $methods = array();
 
     private $copyAllVars = false;
+
+    private $generator = null;
 
     /**
      *
@@ -24,7 +30,13 @@ class MethodTest
     public function __construct($className)
     {
         $this->className = $className;
-        // $this->generator = new
+        $this->generateMethodTestClassName($this->className);
+        $this->generator = new ClassGenerator();
+    }
+
+    private function generateMethodTestClassName($className)
+    {
+        $this->methodTestClassName = $this->classPrefix . $className . substr(md5(microtime()), 0, 8);
     }
 
     /**
@@ -39,7 +51,7 @@ class MethodTest
 
     public function create()
     {
-
+        $this->generator->generateClass();
     }
 
     public function copyMethods(array $methods)
@@ -78,5 +90,13 @@ class MethodTest
             $this->vars = $vars;
         }
         return $this;
+    }
+
+    public function get($property)
+    {
+        if (!$this->{$property}) {
+            throw new \PHPUnit_Framework_Error("Property $property does not exists.");
+        }
+        return $this->{$property};
     }
 }

@@ -1,7 +1,7 @@
 <?php
 
 spl_autoload_register(function($class) {
-    if (false === strpos($class, '\\')) {
+    if (false === strpos($class, 'MethodTest')) {
         return;
     }
     $class = trim($class, '\\');

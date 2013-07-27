@@ -11,8 +11,6 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
         MethodTest::from('TestClass')
                 ->copyMethod('importCustomerStreets')
                 ->copyMethods(array())
-                ->copyAllVars()
-                ->copyVar()
-                ->create();
+                ->copyAllVars();
     }
 }
