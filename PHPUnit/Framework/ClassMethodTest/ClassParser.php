@@ -66,7 +66,7 @@ class ClassParser
         foreach ($this->class->getDefaultProperties() as $name => $value) {
             $reflectionProp = $reflectionProperties[$name];
             $propParts = \Reflection::getModifierNames($reflectionProp->getModifiers());
-            array_push($propParts, $name, '=', $this->getPropValue($value) . ';');
+            array_push($propParts, '$' . $name, '=', $this->getPropValue($value) . ';');
             $props[] = implode(' ', $propParts);
         }
 
@@ -114,7 +114,7 @@ class ClassParser
      */
     public function extractFunction($name)
     {
-        $func = $this->class->getMethod($name);
+        $func = $this->getMethod($name);
         $startLine = $func->getStartLine() - 1;
         $endLine = $func->getEndLine();
         $length = $endLine - $startLine;
@@ -124,6 +124,21 @@ class ClassParser
 
         $function = implode("", $functionLines);
         return $function;
+    }
+
+    /**
+     *
+     * @param string $name
+     * @return \ReflectionMethod
+     * @throws \PHPUnit_Framework_Exception
+     */
+    private function getMethod($name)
+    {
+        try {
+            return $this->class->getMethod($name);
+        } catch (\ReflectionException $e) {
+            throw new \PHPUnit_Framework_Exception("Cannot copy method $name. Method does not exists.", null, $e);
+        }
     }
 
     /**

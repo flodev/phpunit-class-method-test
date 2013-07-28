@@ -15,16 +15,23 @@ spl_autoload_register(function($class) {
 
     switch ($firstClassPart) {
         case 'PHPUnit':
-            require_once realpath(__DIR__)
+            $path = realpath(__DIR__)
                 . DIRECTORY_SEPARATOR
                 . '..' . DIRECTORY_SEPARATOR
                 . $classPath . '.php';
+            if (file_exists($path)) {
+                require_once $path;
+            }
             break;
         case 'Tests':
             $classPath = substr_replace($classPath, '', 0, strpos($classPath, DIRECTORY_SEPARATOR));
-            require_once realpath(__DIR__)
+            $path = realpath(__DIR__)
                 . DIRECTORY_SEPARATOR
                 . $classPath . '.php';
+
+            if (file_exists($path)) {
+                require_once $path;
+            }
             break;
     }
 });

@@ -9,11 +9,7 @@ use PHPUnit\Framework\ClassMethodTest\ClassGenerator;
 
 class Build
 {
-    private $classPrefix = 'ClassMethodTest_';
-
     private $className = null;
-
-    private $methodTestClassName = null;
 
     private $propertyMocks = array();
 
@@ -28,12 +24,6 @@ class Build
     public function __construct($className)
     {
         $this->className = $className;
-        $this->generateMethodTestClassName($this->className);
-    }
-
-    private function generateMethodTestClassName($className)
-    {
-        $this->methodTestClassName = $this->classPrefix . $className . substr(md5(microtime()), 0, 8);
     }
 
     /**
@@ -49,7 +39,7 @@ class Build
     public function create()
     {
         $generator = new ClassGenerator($this, new ClassParser($this->className));
-        $generator->generateClass();
+        return $generator->generateClass();
     }
 
     /**
@@ -87,14 +77,23 @@ class Build
 
     /**
      *
+     * @return bool
+     */
+    public function hasClassPropertyMocks()
+    {
+        return count($this->propertyMocks) > 0;
+    }
+
+    /**
+     *
      * @param string $property
      * @return mixed
-     * @throws \PHPUnit_Framework_Error
+     * @throws \PHPUnit_Framework_Exception
      */
     public function get($property)
     {
-        if (!$this->{$property}) {
-            throw new \PHPUnit_Framework_Error("Property $property does not exists.");
+        if (!property_exists($this, $property)) {
+            throw new \PHPUnit_Framework_Exception("Property $property does not exists.");
         }
         return $this->{$property};
     }

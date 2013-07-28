@@ -20,14 +20,22 @@ class ClassProxy
     private $build = null;
 
 
-    public function __construct(\ReflectionClass $class, Build $methodTest)
+    public function __construct(\ReflectionClass $class, Build $build)
     {
         $this->class = $class;
-        $this->build = $methodTest;
+        $this->build = $build;
     }
 
+    /**
+     *
+     * @return mixed
+     */
     public function createInstance()
     {
-        return $this->class->newInstanceArgs(array_values($this->build->get('propertyMocks')));
+        if ($this->build->hasClassPropertyMocks()) {
+            return $this->class->newInstanceArgs(array_values($this->build->get('propertyMocks')));
+        } else {
+            return $this->class->newInstance();
+        }
     }
 }

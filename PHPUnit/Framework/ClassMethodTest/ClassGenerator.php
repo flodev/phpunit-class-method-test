@@ -1,12 +1,16 @@
 <?php
 /**
  * @author Florian Biewald <f.biewald@gmail.com>
+ *
+ * @todo consider creating an own class for formatting parser results
  */
 
 namespace PHPUnit\Framework\ClassMethodTest;
 
 class ClassGenerator
 {
+    const CLASS_PREFIX = 'ClassMethodTest';
+
     /**
      *
      * @var Build
@@ -27,6 +31,12 @@ class ClassGenerator
 
     /**
      *
+     * @var string
+     */
+    private $classNameForTest = null;
+
+    /**
+     *
      * @param \PHPUnit\Framework\ClassMethodTest\Build $build
      * @param \PHPUnit\Framework\ClassMethodTest\ClassParser $parser
      */
@@ -36,6 +46,15 @@ class ClassGenerator
         $this->templateDir = $templateDir   = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'Template' .
                          DIRECTORY_SEPARATOR;
         $this->parser = $parser;
+        $this->generateMethodTestClassName();
+
+    }
+
+    private function generateMethodTestClassName()
+    {
+        $this->classNameForTest = self::CLASS_PREFIX
+                . $this->parser->getReflection()->getShortName()
+                . substr(md5(microtime()), 0, 8);
     }
 
     /**
@@ -51,7 +70,7 @@ class ClassGenerator
 
         $classTemplate->setVar(array(
             'prologue' => 'class',
-            'class_declaration' => $this->build->get('methodTestClassName'),
+            'class_declaration' => $this->classNameForTest,
             'vars' => $this->getVars(),
             'methods' => $this->getMethods(),
             'namespace' => $this->parser->getNamespace(),
@@ -65,7 +84,7 @@ class ClassGenerator
         try {
             $reflClass = new \ReflectionClass($this->getTestClassName());
         } catch (\Exception $e) {
-            throw new \PHPUnit_Framework_Exception('Cannot instantiate ClassMethod TestClass', null, $e);
+            throw new \PHPUnit_Framework_Exception('Cannot instantiate ClassMethod TestClass: ' . $this->getTestClassName(), null, $e);
         }
 
         return new ClassProxy($reflClass, $this->build);
@@ -83,13 +102,12 @@ class ClassGenerator
      */
     private function getTestClassName()
     {
-        $ns = $this->parser->getReflection()->getNamespaceName();
-        return'\\' . $ns . '\\' . $this->build->get('methodTestClassName');
+        return '\\' . $this->parser->getReflection()->getNamespaceName() . '\\' . $this->classNameForTest;
     }
 
     private function evalClass($code)
     {
-        if (!class_exists($this->getTestClassName())) {
+        if (!class_exists($this->getTestClassName(), false)) {
             eval($code);
         }
     }
@@ -100,7 +118,7 @@ class ClassGenerator
      */
     private function getVars()
     {
-        if ($this->build->get('copyAllVars')) {
+        if ($this->build->get('copyAllProperties')) {
             $props = $this->parser->extractProperties();
 
             if (!count($props)) {
