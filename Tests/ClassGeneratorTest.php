@@ -15,7 +15,6 @@ class ClassGeneratorTest extends PHPUnit_Framework_TestCase
         $proxy = $generator->generateClass();
         $this->assertInstanceOf('PHPUnit\Framework\ClassMethodTest\ClassProxy', $proxy);
         $instance = $proxy->createInstance();
-        $this->assertInstanceOf('\Testiii\NewTestClass', $instance);
         $this->assertEquals('hallo', $instance->method1());
     }
 
@@ -35,6 +34,7 @@ class ClassGeneratorTest extends PHPUnit_Framework_TestCase
         $testMock->expects($this->any())->method('getNamespaceName')->will($this->returnValue('Testiii'));
 
         $classParser->expects($this->any())->method('getNamespace')->will($this->returnValue('namespace Testiii;'));
+        $classParser->expects($this->any())->method('getShortName')->will($this->returnValue('NewTestClass'));
         $classParser->expects($this->any())->method('getReflection')->will($this->returnValue($testMock));
         $classParser->expects($this->any())->method('extractConstants')->will($this->returnValue(array(
             'const TEST1 = "hallo";',
@@ -46,10 +46,11 @@ class ClassGeneratorTest extends PHPUnit_Framework_TestCase
 
     private function getBuildMock()
     {
-        $methodTestMock = $this->getMockBuilder('PHPUnit\Framework\ClassMethodTest\Build')
+        $buildMock = $this->getMockBuilder('PHPUnit\Framework\ClassMethodTest\Build')
                 ->disableOriginalConstructor()->getMock();
 
-        $methodTestMock->expects($this->any())->method('get')->will($this->returnCallback(
+        $buildMock->expects($this->any())->method('hasClassPropertyMocks')->will($this->returnValue(true));
+        $buildMock->expects($this->any())->method('get')->will($this->returnCallback(
             function($prop) {
                 if ($prop === 'methodTestClassName') {
                     return 'NewTestClass';
@@ -65,6 +66,6 @@ class ClassGeneratorTest extends PHPUnit_Framework_TestCase
             }
         ));
 
-        return $methodTestMock;
+        return $buildMock;
     }
 }

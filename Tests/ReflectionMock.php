@@ -14,4 +14,9 @@ class ReflectionMock
     {
 
     }
+
+    public function getShortName()
+    {
+        
+    }
 }
