@@ -2,6 +2,7 @@
 
 {prologue} {class_declaration}
 {
+    {constants}
     {vars}
     {methods}
 }

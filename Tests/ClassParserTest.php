@@ -25,6 +25,12 @@ class ClassParserTest extends \PHPUnit_Framework_TestCase
         $parser->extractProperties();
     }
 
+    public function testConstantsExtract()
+    {
+        $parser = new ClassParser('Tests\TestClass');
+        $constants = $parser->extractConstants();
+    }
+
     /**
      * @expectedException PHPUnit_Framework_Exception
      * @expectedExceptionMessage Class has no file: ClassParserTestTestClass
@@ -36,7 +42,6 @@ class ClassParserTest extends \PHPUnit_Framework_TestCase
             }
         }';
         eval($class);
-
         $parser = new ClassParser('\ClassParserTestTestClass');
         $this->assertContains('public', $parser->extractFunction('test'));
     }

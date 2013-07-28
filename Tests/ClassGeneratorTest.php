@@ -36,6 +36,10 @@ class ClassGeneratorTest extends PHPUnit_Framework_TestCase
 
         $classParser->expects($this->any())->method('getNamespace')->will($this->returnValue('namespace Testiii;'));
         $classParser->expects($this->any())->method('getReflection')->will($this->returnValue($testMock));
+        $classParser->expects($this->any())->method('extractConstants')->will($this->returnValue(array(
+            'const TEST1 = "hallo";',
+            'const TEST2 = "hallo";',
+        )));
 
         return $classParser;
     }

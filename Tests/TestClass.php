@@ -9,6 +9,8 @@ class TestClass
 {
     const TEST = '5';
 
+    const TEST2 = '6';
+
     private $privatePropString = 'String';
 
     protected $protectedPropInt = 0;

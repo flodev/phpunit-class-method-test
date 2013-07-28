@@ -54,7 +54,8 @@ class ClassGenerator
             'class_declaration' => $this->build->get('methodTestClassName'),
             'vars' => $this->getVars(),
             'methods' => $this->getMethods(),
-            'namespace' => $this->parser->getNamespace()
+            'namespace' => $this->parser->getNamespace(),
+            'constants' => $this->getConstants()
         ));
 
         $template = $classTemplate->render();
@@ -68,6 +69,12 @@ class ClassGenerator
         }
 
         return new ClassProxy($reflClass, $this->build);
+    }
+
+    private function getConstants()
+    {
+        $constants = $this->parser->extractConstants();
+        return count($constants) > 0 ? implode("\n", $constants) : '';
     }
 
     /**

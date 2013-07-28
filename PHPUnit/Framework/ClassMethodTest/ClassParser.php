@@ -33,6 +33,10 @@ class ClassParser
         $this->sourceLines = file($filename);
     }
 
+    /**
+     *
+     * @return \ReflectionClass
+     */
     public function getReflection()
     {
         return $this->class;
@@ -50,6 +54,10 @@ class ClassParser
                : '';
     }
 
+    /**
+     *
+     * @return array
+     */
     public function extractProperties()
     {
         $props = array();
@@ -65,6 +73,11 @@ class ClassParser
         return $props;
     }
 
+    /**
+     *
+     * @param mixed $propValue
+     * @return string
+     */
     private function getPropValue($propValue)
     {
         if (is_string($propValue)) {
@@ -81,8 +94,10 @@ class ClassParser
         return $propValue;
     }
 
-
-
+    /**
+     *
+     * @return array
+     */
     public function getReflectionProperties()
     {
         $props = array();
@@ -111,6 +126,11 @@ class ClassParser
         return $function;
     }
 
+    /**
+     *
+     * @param string $line
+     * @return string
+     */
     private function makeMethodPublic($line)
     {
         $functionPos = stripos($line, 'function');
@@ -120,5 +140,18 @@ class ClassParser
         $publicModifier = str_ireplace(array('private', 'protected'), 'public', $stringUntilFunction);
 
         return substr_replace($line, $publicModifier, 0, $functionPos);
+    }
+
+    /**
+     *
+     * @return array
+     */
+    public function extractConstants()
+    {
+        $constants = array();
+        foreach ($this->class->getConstants() as $name => $value) {
+            $constants[] = 'const ' . $name . ' = ' . $this->getPropValue($value) . ';';
+        }
+        return $constants;
     }
 }
