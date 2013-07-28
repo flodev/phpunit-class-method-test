@@ -57,7 +57,9 @@ class ClassGenerator
 
     private function getVars()
     {
-        return '';
+        if ($this->methodTest->get('copyAllVars')) {
+            
+        }
     }
 
     private function getMethods()

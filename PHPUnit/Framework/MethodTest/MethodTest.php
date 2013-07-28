@@ -57,24 +57,40 @@ class MethodTest
      * @param type $method
      * @return \PHPUnit\Framework\MethodTest\MethodTest
      */
-    public function copyMethod($method)
+    public function testMethod($method)
     {
         $this->methods[] = $method;
         return $this;
     }
 
+    /**
+     *
+     * @return \PHPUnit\Framework\MethodTest\MethodTest
+     */
     public function copyAllVars()
     {
         $this->copyAllVars = true;
         return $this;
     }
 
+    /**
+     *
+     * @param string $varName
+     * @param object $mock
+     * @return \PHPUnit\Framework\MethodTest\MethodTest
+     */
     public function mockClassVar($varName, $mock)
     {
         $this->varMocks[$varName] = $mock;
         return $this;
     }
 
+    /**
+     *
+     * @param string $property
+     * @return mixed
+     * @throws \PHPUnit_Framework_Error
+     */
     public function get($property)
     {
         if (!$this->{$property}) {

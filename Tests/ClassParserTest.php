@@ -9,7 +9,7 @@ use PHPUnit\Framework\MethodTest\ClassParser;
 
 class ClassParserTest extends \PHPUnit_Framework_TestCase
 {
-    public function testClassParserFunctionExtract()
+    public function testFunctionExtract()
     {
         $parser = new ClassParser('Tests\TestClass');
         $this->assertContains('public', $parser->extractFunction('privateFuncTest'));
@@ -17,6 +17,12 @@ class ClassParserTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('public', $parser->extractFunction('protectedStaticFuncTest'));
         $this->assertContains('public', $parser->extractFunction('protectedStaticFinalFuncTest'));
         $this->assertEquals('namespace Tests;', $parser->getNamespace());
+    }
+
+    public function testPropertyExtract()
+    {
+        $parser = new ClassParser('Tests\TestClass');
+        $parser->getProperties();
     }
 
     /**

@@ -28,12 +28,61 @@ class ClassParser
         $this->sourceLines = file($filename);
     }
 
+    /**
+     *
+     * @return string
+     */
     public function getNamespace()
     {
         $ns = $this->class->getNamespaceName();
         return !empty($ns)
                ? "namespace $ns;"
                : '';
+    }
+
+    public function getProperties()
+    {
+        $props = array();
+        $reflectionProperties = $this->getReflectionProperties();
+
+        foreach ($this->class->getDefaultProperties() as $name => $value) {
+            $reflectionProp = $reflectionProperties[$name];
+            $propParts = \Reflection::getModifierNames($reflectionProp->getModifiers());
+            $propParts[] = $name;
+            $propParts[] = '=';
+            $propParts[] = $this->getPropValue($value) . ';';
+
+            $props[] = implode(' ', $propParts);
+        }
+
+        return $props;
+    }
+
+    private function getPropValue($propValue)
+    {
+        if (is_string($propValue)) {
+            return "'" . addslashes($propValue) . "'";
+        }
+
+        if (is_null($propValue)) {
+            return 'null';
+        }
+
+        if (is_array($propValue)) {
+            return var_export($propValue, true);
+        }
+        return $propValue;
+    }
+
+
+
+    public function getReflectionProperties()
+    {
+        $props = array();
+        foreach ($this->class->getProperties() as $prop) {
+            $props[$prop->getName()] = $prop;
+        }
+        return $props;
     }
 
     /**

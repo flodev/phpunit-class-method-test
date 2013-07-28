@@ -7,6 +7,18 @@ namespace Tests;
  */
 class TestClass
 {
+    const TEST = '5';
+
+    private $privatePropString = 'String';
+
+    protected $protectedPropInt = 0;
+
+    public $publicPropNull = null;
+
+    static $staticPropTestConstant = self::TEST;
+
+    private $privatePropArray = array('test' => 'muhu', 'fsfds', 'sdfs');
+
     private function privateFuncTest()
     {
         return 'Im private';
