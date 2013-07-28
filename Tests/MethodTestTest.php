@@ -9,8 +9,7 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
     public function testGenerateClass()
     {
         MethodTest::from('TestClass')
-                ->copyMethod('importCustomerStreets')
-                ->copyMethods(array())
-                ->copyAllVars();
+                ->copyAllVars()
+                ->mockClassVar('test', $this->getMock('TestClass'));
     }
 }

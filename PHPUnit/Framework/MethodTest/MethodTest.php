@@ -15,13 +15,11 @@ class MethodTest
 
     private $methodTestClassName = null;
 
-    private $vars = array();
+    private $varMocks = array();
 
     private $methods = array();
 
     private $copyAllVars = false;
-
-    private $generator = null;
 
     /**
      *
@@ -31,7 +29,6 @@ class MethodTest
     {
         $this->className = $className;
         $this->generateMethodTestClassName($this->className);
-        $this->generator = new ClassGenerator();
     }
 
     private function generateMethodTestClassName($className)
@@ -42,7 +39,7 @@ class MethodTest
     /**
      *
      * @param string $className
-     * @return \self
+     * @return \PHPUnit\Framework\MethodTest\MethodTest
      */
     public static function from($className)
     {
@@ -51,19 +48,15 @@ class MethodTest
 
     public function create()
     {
-        $this->generator->generateClass();
+        $generator = new ClassGenerator($this, new ClassParser($this->className));
+        $generator->generateClass();
     }
 
-    public function copyMethods(array $methods)
-    {
-        if ($this->methods) {
-            $this->methods = array_merge($this->methods, $methods);
-        } else {
-            $this->methods = $methods;
-        }
-        return $this;
-    }
-
+    /**
+     *
+     * @param type $method
+     * @return \PHPUnit\Framework\MethodTest\MethodTest
+     */
     public function copyMethod($method)
     {
         $this->methods[] = $method;
@@ -76,19 +69,9 @@ class MethodTest
         return $this;
     }
 
-    public function copyVar($var)
+    public function mockClassVar($varName, $mock)
     {
-        $this->vars[] = $var;
-        return $this;
-  }
-
-    public function copyVars(array $vars)
-    {
-        if ($this->vars) {
-            $this->vars = array_merge($this->vars, $vars);
-        } else {
-            $this->vars = $vars;
-        }
+        $this->varMocks[$varName] = $mock;
         return $this;
     }
 

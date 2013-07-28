@@ -2,7 +2,6 @@
 /**
  * @author florianbiewald@gmail.com
  */
-
 namespace PHPUnit\Framework\MethodTest;
 
 class ClassParser
@@ -13,11 +12,29 @@ class ClassParser
      */
     private $class = null;
 
+    /**
+     *
+     * @var array
+     */
+    private $sourceLines = null;
+
     public function __construct($className)
     {
         $this->class = new \ReflectionClass($className);
+        $filename = $this->class->getFileName();
+        if (!file_exists($filename)) {
+            throw new \PHPUnit_Framework_Exception('Class has no file: ' . $this->class->getName());
+        }
+        $this->sourceLines = file($filename);
     }
 
+    public function getNamespace()
+    {
+        $ns = $this->class->getNamespaceName();
+        return !empty($ns)
+               ? "namespace $ns;"
+               : '';
+    }
 
     /**
      *
@@ -27,20 +44,15 @@ class ClassParser
     public function extractFunction($name)
     {
         $func = $this->class->getMethod($name);
-        $filename = $func->getFileName();
-
-        if (!file_exists($filename)) {
-            throw new \PHPUnit_Framework_Exception('Class has no file: ' . $this->class->getName());
-        }
-
         $startLine = $func->getStartLine() - 1;
         $endLine = $func->getEndLine();
         $length = $endLine - $startLine;
 
-        $source = file($filename);
-        $source[$startLine] = $this->makeMethodPublic($source[$startLine]);
-        $body = implode("", array_slice($source, $startLine, $length));
-        return $body;
+        $functionLines = array_slice($this->sourceLines, $startLine, $length);
+        $functionLines[0] = $this->makeMethodPublic($functionLines[0]);
+
+        $function = implode("", $functionLines);
+        return $function;
     }
 
     private function makeMethodPublic($line)

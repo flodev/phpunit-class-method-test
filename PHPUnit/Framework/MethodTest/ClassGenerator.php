@@ -18,13 +18,21 @@ class ClassGenerator
 
     /**
      *
-     * @param \PHPUnit\Framework\MethodTest\MethodTest $methodTest
+     * @var ClassParser
      */
-    public function __construct(MethodTest $methodTest)
+    private $parser = null;
+
+    /**
+     *
+     * @param \PHPUnit\Framework\MethodTest\MethodTest $methodTest
+     * @param \PHPUnit\Framework\MethodTest\ClassParser $parser
+     */
+    public function __construct(MethodTest $methodTest, ClassParser $parser)
     {
         $this->methodTest = $methodTest;
         $this->templateDir = $templateDir   = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'Template' .
                          DIRECTORY_SEPARATOR;
+        $this->parser = $parser;
     }
 
     public function generateClass()
@@ -36,29 +44,28 @@ class ClassGenerator
         $classTemplate->setVar(array(
             'prologue' => 'class',
             'class_declaration' => $this->methodTest->get('methodTestClassName'),
-            'methods' => $this->getMethods()
+            'vars' => $this->getVars(),
+            'methods' => $this->getMethods(),
+            'namespace' => $this->parser->getNamespace()
         ));
 
         $template = $classTemplate->render();
 
         print_r($template);
+        exit;
+    }
+
+    private function getVars()
+    {
+        return '';
     }
 
     private function getMethods()
     {
-        $classTemplate = new \Text_Template(
-            $this->templateDir . 'method.tpl'
-        );
-
         $methods = array();
 
         foreach ($this->methodTest->get('methods') as $method) {
-            $classTemplate->setVar(array(
-                'modifier' => 'public',
-                'definition' => $method,
-                'body' => ''
-            ));
-            $methods[] = $classTemplate->render();
+            $methods[] = $this->parser->extractFunction($method);
         }
 
         return implode('', $methods);

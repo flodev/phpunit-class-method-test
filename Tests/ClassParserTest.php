@@ -16,6 +16,7 @@ class ClassParserTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('public', $parser->extractFunction('privateStaticFuncTest'));
         $this->assertContains('public', $parser->extractFunction('protectedStaticFuncTest'));
         $this->assertContains('public', $parser->extractFunction('protectedStaticFinalFuncTest'));
+        $this->assertEquals('namespace Tests;', $parser->getNamespace());
     }
 
     /**
