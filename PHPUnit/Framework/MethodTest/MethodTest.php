@@ -15,11 +15,11 @@ class MethodTest
 
     private $methodTestClassName = null;
 
-    private $varMocks = array();
+    private $propertyMocks = array();
 
     private $methods = array();
 
-    private $copyAllVars = false;
+    private $copyAllProperties = false;
 
     /**
      *
@@ -67,9 +67,9 @@ class MethodTest
      *
      * @return \PHPUnit\Framework\MethodTest\MethodTest
      */
-    public function copyAllVars()
+    public function copyAllProperties()
     {
-        $this->copyAllVars = true;
+        $this->copyAllProperties = true;
         return $this;
     }
 
@@ -79,9 +79,9 @@ class MethodTest
      * @param object $mock
      * @return \PHPUnit\Framework\MethodTest\MethodTest
      */
-    public function mockClassVar($varName, $mock)
+    public function mockClassProperty($varName, $mock)
     {
-        $this->varMocks[$varName] = $mock;
+        $this->propertyMocks[$varName] = $mock;
         return $this;
     }
 

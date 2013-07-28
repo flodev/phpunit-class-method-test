@@ -22,7 +22,7 @@ class ClassParserTest extends \PHPUnit_Framework_TestCase
     public function testPropertyExtract()
     {
         $parser = new ClassParser('Tests\TestClass');
-        $parser->getProperties();
+        $parser->extractProperties();
     }
 
     /**

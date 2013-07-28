@@ -41,6 +41,10 @@ class ClassGeneratorTest extends PHPUnit_Framework_TestCase
                     return 'test';
                 }
 
+                if ($prop === 'propertyMocks') {
+                    return array('testMock' => "mock", 'testMock2' => 'mock');
+                }
+
                 if ($prop === 'methods') {
                     return array('method1');
                 }

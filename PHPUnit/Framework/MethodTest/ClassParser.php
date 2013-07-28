@@ -40,7 +40,7 @@ class ClassParser
                : '';
     }
 
-    public function getProperties()
+    public function extractProperties()
     {
         $props = array();
         $reflectionProperties = $this->getReflectionProperties();
@@ -48,10 +48,7 @@ class ClassParser
         foreach ($this->class->getDefaultProperties() as $name => $value) {
             $reflectionProp = $reflectionProperties[$name];
             $propParts = \Reflection::getModifierNames($reflectionProp->getModifiers());
-            $propParts[] = $name;
-            $propParts[] = '=';
-            $propParts[] = $this->getPropValue($value) . ';';
-
+            array_push($propParts, $name, '=', $this->getPropValue($value) . ';');
             $props[] = implode(' ', $propParts);
         }
 

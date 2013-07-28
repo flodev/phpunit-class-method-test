@@ -55,21 +55,84 @@ class ClassGenerator
         exit;
     }
 
+    /**
+     *
+     * @return string
+     */
     private function getVars()
     {
         if ($this->methodTest->get('copyAllVars')) {
-            
+            $props = $this->parser->extractProperties();
+
+            if (!count($props)) {
+                return '';
+            }
+            return implode("\n", $props);
         }
     }
 
+    /**
+     *
+     * @return string
+     */
     private function getMethods()
     {
         $methods = array();
+
+        if ($this->isConstructorNeeded()) {
+            $methods[] = $this->getConstructor();
+        }
 
         foreach ($this->methodTest->get('methods') as $method) {
             $methods[] = $this->parser->extractFunction($method);
         }
 
         return implode('', $methods);
+    }
+
+    /**
+     *
+     * @return bool
+     */
+    private function isConstructorNeeded()
+    {
+        return count($this->methodTest->get('propertyMocks')) > 0;
+    }
+
+    /**
+     *
+     * @return string
+     */
+    private function getConstructor()
+    {
+        $vars = array();
+        $argumentsToInstanceVars = array();
+
+        foreach ($this->methodTest->get('propertyMocks') as $name => $mock) {
+            $vars[] = $name;
+            $argumentsToInstanceVars[] = $this->getIndent(2) . '$this->' . $name . ' = ' . '$' . $name . ';';
+        }
+
+        # open constructor
+        $constructor = "\n" . $this->getIndent(1) . 'public function __construct(';
+        # function arguments
+        $constructor.= '$' . implode(', $', $vars) . "){\n";
+        # set arguments to instance variables
+        $constructor.= implode("\n", $argumentsToInstanceVars) . "\n";
+        # close constructor
+        $constructor.= $this->getIndent(1) . "}\n\n";
+
+        return $constructor;
+    }
+
+    /**
+     *
+     * @param int $level
+     * @return string
+     */
+    private function getIndent($level = 0)
+    {
+        $indentSpaces = 4;
+        return str_pad('', $indentSpaces * $level);
     }
 }
