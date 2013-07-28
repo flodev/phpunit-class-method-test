@@ -1,8 +1,8 @@
 <?php
 /**
- * @author Florian Biewald
+ * @author Florian Biewald <f.biewald@gmail.com>
  */
-namespace PHPUnit\Framework\MethodTest;
+namespace PHPUnit\Framework\ClassMethodTest;
 
 class ClassParser
 {
@@ -18,6 +18,11 @@ class ClassParser
      */
     private $sourceLines = null;
 
+    /**
+     *
+     * @param string $className
+     * @throws \PHPUnit_Framework_Exception
+     */
     public function __construct($className)
     {
         $this->class = new \ReflectionClass($className);

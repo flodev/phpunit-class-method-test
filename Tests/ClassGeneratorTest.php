@@ -1,6 +1,6 @@
 <?php
 
-use PHPUnit\Framework\MethodTest\ClassGenerator;
+use PHPUnit\Framework\ClassMethodTest\ClassGenerator;
 
 class ClassGeneratorTest extends PHPUnit_Framework_TestCase
 {
@@ -8,12 +8,12 @@ class ClassGeneratorTest extends PHPUnit_Framework_TestCase
     public function testTest()
     {
         $generator = new ClassGenerator(
-            $this->getMethodTestMock(),
+            $this->getBuildMock(),
             $this->getClassParserMock()
         );
 
         $proxy = $generator->generateClass();
-        $this->assertInstanceOf('PHPUnit\Framework\MethodTest\ClassProxy', $proxy);
+        $this->assertInstanceOf('PHPUnit\Framework\ClassMethodTest\ClassProxy', $proxy);
         $instance = $proxy->createInstance();
         $this->assertInstanceOf('\Testiii\NewTestClass', $instance);
         $this->assertEquals('hallo', $instance->method1());
@@ -21,7 +21,7 @@ class ClassGeneratorTest extends PHPUnit_Framework_TestCase
 
     private function getClassParserMock()
     {
-        $classParser = $this->getMockBuilder('PHPUnit\Framework\MethodTest\ClassParser')
+        $classParser = $this->getMockBuilder('PHPUnit\Framework\ClassMethodTest\ClassParser')
                 ->disableOriginalConstructor()->getMock();
         $classParser->expects($this->any())->method('extractFunction')->will(
             $this->returnValue('
@@ -40,9 +40,9 @@ class ClassGeneratorTest extends PHPUnit_Framework_TestCase
         return $classParser;
     }
 
-    private function getMethodTestMock()
+    private function getBuildMock()
     {
-        $methodTestMock = $this->getMockBuilder('PHPUnit\Framework\MethodTest\MethodTest')
+        $methodTestMock = $this->getMockBuilder('PHPUnit\Framework\ClassMethodTest\Build')
                 ->disableOriginalConstructor()->getMock();
 
         $methodTestMock->expects($this->any())->method('get')->will($this->returnCallback(

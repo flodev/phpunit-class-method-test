@@ -1,11 +1,11 @@
 <?php
 /**
- * @author Florian Biewald
+ * @author Florian Biewald <f.biewald@gmail.com>
  */
 
 namespace Tests;
 
-use PHPUnit\Framework\MethodTest\ClassParser;
+use PHPUnit\Framework\ClassMethodTest\ClassParser;
 
 class ClassParserTest extends \PHPUnit_Framework_TestCase
 {

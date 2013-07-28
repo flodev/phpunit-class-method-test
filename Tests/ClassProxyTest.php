@@ -1,11 +1,11 @@
 <?php
 /**
- * @author Florian Biewald
+ * @author Florian Biewald <f.biewald@gmail.com>
  */
 
 namespace Tests;
 
-use PHPUnit\Framework\MethodTest\ClassProxy;
+use PHPUnit\Framework\ClassMethodTest\ClassProxy;
 
 class ClassProxyTest extends \PHPUnit_Framework_TestCase
 {
@@ -13,14 +13,14 @@ class ClassProxyTest extends \PHPUnit_Framework_TestCase
     {
         $proxy = new ClassProxy(
             new \ReflectionClass('Tests\TestClass'),
-            $this->getMethodTestMock()
+            $this->getBuildMock()
         );
         $this->assertInstanceOf('Tests\TestClass', $proxy->createInstance());
     }
 
-    private function getMethodTestMock()
+    private function getBuildMock()
     {
-        $mock = $this->getMockBuilder('PHPUnit\Framework\MethodTest\MethodTest')
+        $mock = $this->getMockBuilder('PHPUnit\Framework\ClassMethodTest\Build')
                 ->disableOriginalConstructor()
                 ->getMock();
 

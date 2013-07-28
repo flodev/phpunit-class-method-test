@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @author Florian Biewald
+ * @author Florian Biewald <f.biewald@gmail.com>
  *
  * cannot mock \ReflectionClass with phpunit
  *

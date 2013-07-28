@@ -1,11 +1,11 @@
 <?php
 
 /**
- * loads namespaced class that either start with MethodTest or Tests
+ * loads namespaced class that either contains ClassMethodTest or starts with Tests
  */
 
 spl_autoload_register(function($class) {
-    if (false === strpos($class, 'MethodTest') && 0 !== strpos($class, 'Tests')) {
+    if (false === strpos($class, 'ClassMethodTest') && 0 !== strpos($class, 'Tests')) {
         return;
     }
 

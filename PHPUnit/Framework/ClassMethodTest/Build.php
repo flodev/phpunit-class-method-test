@@ -1,15 +1,15 @@
 <?php
 /**
- * @author Florian Biewald
+ * @author Florian Biewald <f.biewald@gmail.com>
  */
 
-namespace PHPUnit\Framework\MethodTest;
+namespace PHPUnit\Framework\ClassMethodTest;
 
-use PHPUnit\Framework\MethodTest\ClassGenerator;
+use PHPUnit\Framework\ClassMethodTest\ClassGenerator;
 
-class MethodTest
+class Build
 {
-    private $classPrefix = 'MethodTest_';
+    private $classPrefix = 'ClassMethodTest_';
 
     private $className = null;
 
@@ -39,7 +39,7 @@ class MethodTest
     /**
      *
      * @param string $className
-     * @return \PHPUnit\Framework\MethodTest\MethodTest
+     * @return \PHPUnit\Framework\ClassMethodTest\Build
      */
     public static function from($className)
     {
@@ -55,7 +55,7 @@ class MethodTest
     /**
      *
      * @param type $method
-     * @return \PHPUnit\Framework\MethodTest\MethodTest
+     * @return \PHPUnit\Framework\ClassMethodTest\Build
      */
     public function testMethod($method)
     {
@@ -65,7 +65,7 @@ class MethodTest
 
     /**
      *
-     * @return \PHPUnit\Framework\MethodTest\MethodTest
+     * @return \PHPUnit\Framework\ClassMethodTest\Build
      */
     public function copyAllProperties()
     {
@@ -77,7 +77,7 @@ class MethodTest
      *
      * @param string $varName
      * @param object $mock
-     * @return \PHPUnit\Framework\MethodTest\MethodTest
+     * @return \PHPUnit\Framework\ClassMethodTest\Build
      */
     public function mockClassProperty($varName, $mock)
     {

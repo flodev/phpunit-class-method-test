@@ -2,13 +2,13 @@
 
 namespace Tests;
 
-use PHPUnit\Framework\MethodTest\MethodTest;
+use PHPUnit\Framework\ClassMethodTest\Build;
 
 class GeneratorTest extends \PHPUnit_Framework_TestCase
 {
     public function testGenerateClass()
     {
-//        MethodTest::from('TestClass')
+//        Build::from('TestClass')
 //                ->testMethod('testMethod')
 //                ->copyAllVars()
 //                ->mockClassVar('test', $this->getMock('TestClass'))
