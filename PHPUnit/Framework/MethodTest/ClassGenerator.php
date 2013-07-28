@@ -35,6 +35,11 @@ class ClassGenerator
         $this->parser = $parser;
     }
 
+    /**
+     *
+     * @return \PHPUnit\Framework\MethodTest\ClassProxy
+     * @throws \PHPUnit_Framework_Exception
+     */
     public function generateClass()
     {
         $classTemplate = new \Text_Template(
@@ -51,8 +56,32 @@ class ClassGenerator
 
         $template = $classTemplate->render();
 
-        print_r($template);
-        exit;
+        $this->evalClass($template);
+
+        try {
+            $reflClass = new \ReflectionClass($this->getTestClassName());
+        } catch (\Exception $e) {
+            throw new \PHPUnit_Framework_Exception('Cannot instantiate ClassMethod TestClass', null, $e);
+        }
+
+        return new ClassProxy($reflClass, $this->methodTest);
+    }
+
+    /**
+     *
+     * @return string
+     */
+    private function getTestClassName()
+    {
+        $ns = $this->parser->getReflection()->getNamespaceName();
+        return'\\' . $ns . '\\' . $this->methodTest->get('methodTestClassName');
+    }
+
+    private function evalClass($code)
+    {
+        if (!class_exists($this->getTestClassName())) {
+            eval($code);
+        }
     }
 
     /**

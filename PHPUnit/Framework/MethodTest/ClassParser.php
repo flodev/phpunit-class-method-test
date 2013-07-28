@@ -1,6 +1,6 @@
 <?php
 /**
- * @author florianbiewald@gmail.com
+ * @author Florian Biewald
  */
 namespace PHPUnit\Framework\MethodTest;
 
@@ -26,6 +26,11 @@ class ClassParser
             throw new \PHPUnit_Framework_Exception('Class has no file: ' . $this->class->getName());
         }
         $this->sourceLines = file($filename);
+    }
+
+    public function getReflection()
+    {
+        return $this->class;
     }
 
     /**

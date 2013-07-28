@@ -3,7 +3,7 @@
 namespace Tests;
 
 /**
- * @author florianbiewald@gmail.com
+ * @author Florian Biewald
  */
 class TestClass
 {

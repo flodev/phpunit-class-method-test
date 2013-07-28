@@ -11,7 +11,12 @@ class ClassGeneratorTest extends PHPUnit_Framework_TestCase
             $this->getMethodTestMock(),
             $this->getClassParserMock()
         );
-        $generator->generateClass();
+
+        $proxy = $generator->generateClass();
+        $this->assertInstanceOf('PHPUnit\Framework\MethodTest\ClassProxy', $proxy);
+        $instance = $proxy->createInstance();
+        $this->assertInstanceOf('\Testiii\NewTestClass', $instance);
+        $this->assertEquals('hallo', $instance->method1());
     }
 
     private function getClassParserMock()
@@ -21,11 +26,16 @@ class ClassGeneratorTest extends PHPUnit_Framework_TestCase
         $classParser->expects($this->any())->method('extractFunction')->will(
             $this->returnValue('
                 public function method1() {
+                    return "hallo";
                 }
             ')
         );
 
-        $classParser->expects($this->any())->method('getNamespace')->will($this->returnValue('namespace TestNs;'));
+        $testMock = $this->getMock("Tests\ReflectionMock");
+        $testMock->expects($this->any())->method('getNamespaceName')->will($this->returnValue('Testiii'));
+
+        $classParser->expects($this->any())->method('getNamespace')->will($this->returnValue('namespace Testiii;'));
+        $classParser->expects($this->any())->method('getReflection')->will($this->returnValue($testMock));
 
         return $classParser;
     }
@@ -38,7 +48,7 @@ class ClassGeneratorTest extends PHPUnit_Framework_TestCase
         $methodTestMock->expects($this->any())->method('get')->will($this->returnCallback(
             function($prop) {
                 if ($prop === 'methodTestClassName') {
-                    return 'test';
+                    return 'NewTestClass';
                 }
 
                 if ($prop === 'propertyMocks') {
@@ -50,6 +60,7 @@ class ClassGeneratorTest extends PHPUnit_Framework_TestCase
                 }
             }
         ));
+
         return $methodTestMock;
     }
 }

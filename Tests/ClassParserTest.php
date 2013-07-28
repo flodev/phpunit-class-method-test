@@ -1,6 +1,6 @@
 <?php
 /**
- * @author florianbiewald@gmail.com
+ * @author Florian Biewald
  */
 
 namespace Tests;
