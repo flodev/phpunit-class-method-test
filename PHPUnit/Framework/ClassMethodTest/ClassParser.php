@@ -25,12 +25,35 @@ class ClassParser
      */
     public function __construct($className)
     {
-        $this->class = new \ReflectionClass($className);
+        $this->createReflectionClass($className);
+        $this->fetchSourceLines();
+    }
+
+    /**
+     *
+     * @throws \PHPUnit_Framework_Exception
+     */
+    private function fetchSourceLines()
+    {
         $filename = $this->class->getFileName();
         if (!file_exists($filename)) {
             throw new \PHPUnit_Framework_Exception('Class has no file: ' . $this->class->getName());
         }
         $this->sourceLines = file($filename);
+    }
+
+    /**
+     *
+     * @param string $className
+     * @throws \PHPUnit_Framework_Exception
+     */
+    private function createReflectionClass($className)
+    {
+        try {
+            $this->class = new \ReflectionClass($className);
+        } catch (\ReflectionException $e) {
+            throw new \PHPUnit_Framework_Exception('Cannot create reflection class: ' . $className, null, $e);
+        }
     }
 
     /**

@@ -32,17 +32,27 @@ class TestListener implements PHPUnit_Framework_TestListener
 
     public function endTest(PHPUnit_Framework_Test $test, $time)
     {
-        $coverage = $test->getTestResultObject()->getCodeCoverage();
-        $coverage->start($test, false);
+        $testResult = $test->getTestResultObject();
 
-        $test->getTestResultObject()->getCodeCoverage()->append(
-            array('/Users/florian/projects/phpunit-class-method-test/PHPUnit/TestClass.php' =>
-                array(
-                    26 => 1
+        if (empty($testResult)) {
+            return;
+        }
+
+        if ($testResult->getCollectCodeCoverageInformation()) {
+            $coverage = $test->getTestResultObject()->getCodeCoverage();
+            $coverage->start($test, false);
+
+            $test->getTestResultObject()->getCodeCoverage()->append(
+                array('/Users/florian/projects/phpunit-class-method-test/PHPUnit/TestClass.php' =>
+                    array(
+                        26 => 1
+                    )
                 )
-            )
-        );
-        $coverage->stop();
+            );
+            $coverage->stop();
+        } else {
+            echo "\n\n~~~~ Run without xdebug ~~~~\n\n";
+        }
     }
 
     public function startTestSuite(PHPUnit_Framework_TestSuite $suite)

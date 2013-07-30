@@ -105,6 +105,10 @@ class ClassGenerator
         return '\\' . $this->parser->getReflection()->getNamespaceName() . '\\' . $this->classNameForTest;
     }
 
+    /**
+     *
+     * @param string $code
+     */
     private function evalClass($code)
     {
         if (!class_exists($this->getTestClassName(), false)) {
