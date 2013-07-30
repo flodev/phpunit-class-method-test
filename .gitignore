@@ -4,6 +4,5 @@ build/coverage
 build/logs
 build/pdepend
 cache.properties
-phpunit.xml
 *.sublime*
 .DS_Store
