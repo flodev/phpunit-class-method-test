@@ -1,10 +1,13 @@
 <?php
 
-namespace PHPUnit;
-
 /**
  * @author Florian Biewald <f.biewald@gmail.com>
+ * @todo: move to test folder
  */
+
+namespace PHPUnit;
+
+
 class TestClass
 {
     const TEST = '5';

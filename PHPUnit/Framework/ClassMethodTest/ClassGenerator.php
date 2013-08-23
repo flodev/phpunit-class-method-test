@@ -77,9 +77,18 @@ class ClassGenerator
             'constants' => $this->getConstants()
         ));
 
-        $template = $classTemplate->render();
+//        if (class_exists('', false))
 
-        $this->evalClass($template);
+        $template = $classTemplate->render();
+//        $file = tmpfile();
+        $file = fopen(tempnam(sys_get_temp_dir(), 'Tux'), 'w');
+        fwrite($file, $classTemplate->render());
+        $data = stream_get_meta_data($file);
+
+        file_put_contents('/tmp/filename', $data['uri']);
+        include $data['uri'];
+//        exit;
+//        $this->evalClass($template);
 
         try {
             $reflClass = new \ReflectionClass($this->getTestClassName());

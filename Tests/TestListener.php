@@ -1,10 +1,18 @@
 <?php
 /**
  * @author Florian Biewald <f.biewald@gmail.com>
+ *
+ * @todo must be moved to ClassMethodTest folder
  */
 
 class TestListener implements PHPUnit_Framework_TestListener
 {
+    public function __construct()
+    {
+//        $refl = new ReflectionClass('\PHPUnit\Framework\ClassMethodTest\ClassGenerator');
+//        $this->classGeneratorPath = $refl->getFileName();
+    }
+
     public function addError(PHPUnit_Framework_Test $test, Exception $e, $time)
     {
 //        printf("Error while running test '%s'.\n", $test->getName());
@@ -37,12 +45,22 @@ class TestListener implements PHPUnit_Framework_TestListener
         if (empty($testResult)) {
             return;
         }
+        /**
+         * @todo decide whether xdebug is used and testlistener is registered,
+         * then use tmp file instead of eval
+         * cleanup tmp file in test listener ... ?
+         */
+
 
         if ($testResult->getCollectCodeCoverageInformation()) {
-            $coverage = $test->getTestResultObject()->getCodeCoverage();
+            $coverage = $testResult->getCodeCoverage();
+
+            print_r($coverage->getData());
+            exit;
             $coverage->start($test, false);
 
-            $test->getTestResultObject()->getCodeCoverage()->append(
+
+            $testResult->getCodeCoverage()->append(
                 array('/Users/florian/projects/phpunit-class-method-test/PHPUnit/TestClass.php' =>
                     array(
                         26 => 1
@@ -51,7 +69,7 @@ class TestListener implements PHPUnit_Framework_TestListener
             );
             $coverage->stop();
         } else {
-            echo "\n\n~~~~ Run without xdebug ~~~~\n\n";
+            echo "\n\n~~~~ " . __METHOD__ . " Run without xdebug ~~~~\n\n";
         }
     }
 

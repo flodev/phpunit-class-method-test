@@ -4,13 +4,13 @@ namespace Tests;
 
 require_once __DIR__ . '/../PHPUnit/TestClass.php';
 
-use PHPUnit\Framework\ClassMethodTest\Build;
+use PHPUnit\Framework\ClassMethodTest\Build as BuildClassMethodTest;
 
 class BuildTest extends \PHPUnit_Framework_TestCase
 {
     public function testGenerateClass()
     {
-        $proxy = Build::from('\PHPUnit\TestClass')
+        $proxy = BuildClassMethodTest::from('\PHPUnit\TestClass')
                 ->testMethod('privateFuncTest')
                 ->copyAllProperties()
                 ->mockClassProperty('test', $this->getMock('TestClass'))

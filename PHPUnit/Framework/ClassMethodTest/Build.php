@@ -9,21 +9,41 @@ use PHPUnit\Framework\ClassMethodTest\ClassGenerator;
 
 class Build
 {
+    /**
+     *
+     * @var string
+     */
     private $className = null;
 
+    /**
+     *
+     * @var array
+     */
     private $propertyMocks = array();
 
+    /**
+     *
+     * @var array
+     */
     private $methods = array();
 
+    /**
+     *
+     * @var boolean
+     */
     private $copyAllProperties = false;
 
     /**
      *
      * @param string $className
      */
-    public function __construct($className)
+    private function __construct($className)
     {
         $this->className = $className;
+    }
+
+    private function __clone()
+    {
     }
 
     /**
@@ -36,6 +56,10 @@ class Build
         return new self($className);
     }
 
+    /**
+     *
+     * @return \PHPUnit\Framework\ClassMethodTest\ClassProxy
+     */
     public function create()
     {
         $generator = new ClassGenerator($this, new ClassParser($this->className));
@@ -44,7 +68,7 @@ class Build
 
     /**
      *
-     * @param type $method
+     * @param string $method
      * @return \PHPUnit\Framework\ClassMethodTest\Build
      */
     public function testMethod($method)

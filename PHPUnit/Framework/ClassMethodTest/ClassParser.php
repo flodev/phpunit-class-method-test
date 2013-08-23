@@ -20,11 +20,18 @@ class ClassParser
 
     /**
      *
+     * @var array
+     */
+    private static $startLine = array();
+
+    /**
+     *
      * @param string $className
      * @throws \PHPUnit_Framework_Exception
      */
     public function __construct($className)
     {
+        self::$startLine = null;
         $this->createReflectionClass($className);
         $this->fetchSourceLines();
     }
@@ -141,12 +148,41 @@ class ClassParser
         $startLine = $func->getStartLine() - 1;
         $endLine = $func->getEndLine();
         $length = $endLine - $startLine;
+        $this->setStartLine($startLine);
 
         $functionLines = array_slice($this->sourceLines, $startLine, $length);
         $functionLines[0] = $this->makeMethodPublic($functionLines[0]);
 
         $function = implode("", $functionLines);
         return $function;
+    }
+
+    /**
+     *
+     * @param int $startLine
+     */
+    private function setStartLine($startLine)
+    {
+        if (self::$startLine === null) {
+            self::$startLine = $startLine;
+        }
+//        if (isset(self::$startLines[$this->class->getName()])) {
+//            $existingLine = self::$startLines[$this->class->getName()];
+//            if ($startLine < $existingLine) {
+//                self::$startLines[$this->class->getName()] = $startLine;
+//            }
+//        } else {
+//            self::$startLines[$this->class->getName()] = $startLine;
+//        }
+    }
+
+    /**
+     *
+     * @return int
+     */
+    public static function getStartLine()
+    {
+        return self::$startLine;
     }
 
     /**
