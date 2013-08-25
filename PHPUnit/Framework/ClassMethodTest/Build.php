@@ -35,10 +35,17 @@ class Build
 
     /**
      *
+     * @var array
+     */
+    private static $testMethods = null;
+
+    /**
+     *
      * @param string $className
      */
     private function __construct($className)
     {
+        self::$testMethods = array();
         $this->className = $className;
     }
 
@@ -74,6 +81,7 @@ class Build
     public function testMethod($method)
     {
         $this->methods[] = $method;
+        self::$testMethods[] = $method;
         return $this;
     }
 
@@ -120,5 +128,14 @@ class Build
             throw new \PHPUnit_Framework_Exception("Property $property does not exists.");
         }
         return $this->{$property};
+    }
+
+    /**
+     *
+     * @return array
+     */
+    public static function getTestMethods()
+    {
+        return self::$testMethods;
     }
 }

@@ -26,6 +26,10 @@ class TestClass
 
     private function privateFuncTest()
     {
+        $test = "muh";
+        if (!$test) {
+            echo "lala";
+        }
         return 'Im private';
     }
 

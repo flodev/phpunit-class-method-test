@@ -5,6 +5,7 @@
  */
 
 spl_autoload_register(function($class) {
+    # cancel autoloading when its not a unit test or classMethodTest
     if (false === strpos($class, 'ClassMethodTest') && 0 !== strpos($class, 'Tests')) {
         return;
     }

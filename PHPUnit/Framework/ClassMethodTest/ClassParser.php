@@ -20,9 +20,21 @@ class ClassParser
 
     /**
      *
-     * @var array
+     * @var int
      */
-    private static $startLine = array();
+    private static $startLine = null;
+
+    /**
+     *
+     * @var string
+     */
+    private static $className = null;
+
+    /**
+     *
+     * @var string
+     */
+    private static $classFilePath = null;
 
     /**
      *
@@ -32,7 +44,11 @@ class ClassParser
     public function __construct($className)
     {
         self::$startLine = null;
+        self::$className = $className;
         $this->createReflectionClass($className);
+
+        self::$classFilePath = $this->class->getFileName();
+        
         $this->fetchSourceLines();
     }
 
@@ -82,6 +98,15 @@ class ClassParser
         return !empty($ns)
                ? "namespace $ns;"
                : '';
+    }
+
+    /**
+     *
+     * @return string
+     */
+    public function getNamespaceName()
+    {
+        return $this->class->getNamespaceName();
     }
 
     /**
@@ -187,6 +212,15 @@ class ClassParser
 
     /**
      *
+     * @return string
+     */
+    public static function getClassName()
+    {
+        return self::$className;
+    }
+
+    /**
+     *
      * @param string $name
      * @return \ReflectionMethod
      * @throws \PHPUnit_Framework_Exception
@@ -210,7 +244,7 @@ class ClassParser
         $functionPos = stripos($line, 'function');
         $stringUntilFunction = substr($line, 0, $functionPos);
 
-        // replace protected/private with public
+        # replace protected/private with public
         $publicModifier = str_ireplace(array('private', 'protected'), 'public', $stringUntilFunction);
 
         return substr_replace($line, $publicModifier, 0, $functionPos);
@@ -227,5 +261,14 @@ class ClassParser
             $constants[] = 'const ' . $name . ' = ' . $this->getPropValue($value) . ';';
         }
         return $constants;
+    }
+
+    /**
+     *
+     * @return string
+     */
+    public static function getClassFilePath()
+    {
+        return self::$classFilePath;
     }
 }

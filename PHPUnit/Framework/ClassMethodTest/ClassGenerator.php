@@ -2,7 +2,9 @@
 /**
  * @author Florian Biewald <f.biewald@gmail.com>
  *
- * @todo consider creating an own class for formatting parser results
+ * @todo
+ * - consider creating an own class for formatting parser results
+ * - test without constructor
  */
 
 namespace PHPUnit\Framework\ClassMethodTest;
@@ -37,11 +39,26 @@ class ClassGenerator
 
     /**
      *
+     * @var string
+     */
+    private static $generatedClassName = null;
+
+    /**
+     *
+     * @var string
+     */
+    private static $classFilePath = null;
+
+    /**
+     *
      * @param \PHPUnit\Framework\ClassMethodTest\Build $build
      * @param \PHPUnit\Framework\ClassMethodTest\ClassParser $parser
      */
     public function __construct(Build $build, ClassParser $parser)
     {
+        self::$generatedClassName = null;
+        self::$classFilePath = null;
+
         $this->build = $build;
         $this->templateDir = $templateDir   = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'Template' .
                          DIRECTORY_SEPARATOR;
@@ -55,6 +72,13 @@ class ClassGenerator
         $this->classNameForTest = self::CLASS_PREFIX
                 . $this->parser->getReflection()->getShortName()
                 . substr(md5(microtime()), 0, 8);
+
+        self::$generatedClassName = '\\';
+
+        if ($this->parser->getNamespaceName() !== null) {
+            self::$generatedClassName.= $this->parser->getNamespaceName() . '\\';
+        }
+        self::$generatedClassName.= $this->classNameForTest;
     }
 
     /**
@@ -77,28 +101,75 @@ class ClassGenerator
             'constants' => $this->getConstants()
         ));
 
-//        if (class_exists('', false))
-
-        $template = $classTemplate->render();
-//        $file = tmpfile();
-        $file = fopen(tempnam(sys_get_temp_dir(), 'Tux'), 'w');
-        fwrite($file, $classTemplate->render());
-        $data = stream_get_meta_data($file);
-
-        file_put_contents('/tmp/filename', $data['uri']);
-        include $data['uri'];
-//        exit;
-//        $this->evalClass($template);
-
-        try {
-            $reflClass = new \ReflectionClass($this->getTestClassName());
-        } catch (\Exception $e) {
-            throw new \PHPUnit_Framework_Exception('Cannot instantiate ClassMethod TestClass: ' . $this->getTestClassName(), null, $e);
+        if ($this->isCodeCoverageNeeded()) {
+            $this->includeFile($this->createTestClass($classTemplate->render()));
+        } else {
+            $this->evalClass($classTemplate->render());
         }
 
-        return new ClassProxy($reflClass, $this->build);
+        return new ClassProxy($this->getReflectionClass(), $this->build);
     }
 
+    /**
+     *
+     * @return \ReflectionClass
+     * @throws \PHPUnit_Framework_Exception
+     */
+    private function getReflectionClass()
+    {
+        try {
+            return new \ReflectionClass($this->getTestClassName());
+        } catch (\Exception $e) {
+            throw new \PHPUnit_Framework_Exception(
+                'Cannot instantiate ClassMethod TestClass: ' . $this->getTestClassName(), null, $e
+            );
+        }
+    }
+
+    /**
+     *
+     * @return boolean
+     */
+    private function isCodeCoverageNeeded()
+    {
+        return class_exists('\PHPUnit\Framework\ClassMethodTest\TestListener', false) && xdebug_is_enabled();
+    }
+
+    /**
+     *
+     * @param string $code
+     * @return string
+     */
+    private function createTestClass($code)
+    {
+        # for some reason i can't use tmpfile() here even though script executing seems not broken
+        $file = fopen(tempnam(sys_get_temp_dir(), 'ClassMethodTestClass'), 'w');
+        fwrite($file, $code);
+        $data = stream_get_meta_data($file);
+        if (array_key_exists('uri', $data)) {
+            self::$classFilePath = $data['uri'];
+            return $data['uri'];
+        }
+        return '';
+    }
+
+    /**
+     *
+     * @param string $path
+     * @throws \PHPUnit_Framework_Exception
+     */
+    private function includeFile($path)
+    {
+        if (empty($path) || !file_exists($path)) {
+            throw new \PHPUnit_Framework_Exception('Cannot include file: ' . $path);
+        }
+        require_once $path;
+    }
+
+    /**
+     *
+     * @return string
+     */
     private function getConstants()
     {
         $constants = $this->parser->extractConstants();
@@ -148,10 +219,7 @@ class ClassGenerator
     private function getMethods()
     {
         $methods = array();
-
-        if ($this->isConstructorNeeded()) {
-            $methods[] = $this->getConstructor();
-        }
+        $methods[] = $this->getConstructor();
 
         foreach ($this->build->get('methods') as $method) {
             $methods[] = $this->parser->extractFunction($method);
@@ -161,7 +229,6 @@ class ClassGenerator
     }
 
     /**
-     *
      * @return bool
      */
     private function isConstructorNeeded()
@@ -186,9 +253,14 @@ class ClassGenerator
         # open constructor
         $constructor = "\n" . $this->getIndent(1) . 'public function __construct(';
         # function arguments
-        $constructor.= '$' . implode(', $', $vars) . "){\n";
+        if ($vars) {
+            $constructor.= '$' . implode(', $', $vars) . "";
+        }
+        $constructor.= "){\n";
         # set arguments to instance variables
-        $constructor.= implode("\n", $argumentsToInstanceVars) . "\n";
+        if ($argumentsToInstanceVars) {
+            $constructor.= implode("\n", $argumentsToInstanceVars) . "\n";
+        }
         # close constructor
         $constructor.= $this->getIndent(1) . "}\n\n";
 
@@ -204,5 +276,23 @@ class ClassGenerator
     {
         $indentSpaces = 4;
         return str_pad('', $indentSpaces * $level);
+    }
+
+    /**
+     *
+     * @return string
+     */
+    public static function getGeneratedClassName()
+    {
+        return self::$generatedClassName;
+    }
+
+    /**
+     *
+     * @return string
+     */
+    public static function getClassFilePath()
+    {
+        return self::$classFilePath;
     }
 }
