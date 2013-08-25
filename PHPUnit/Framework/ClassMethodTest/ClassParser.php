@@ -4,6 +4,8 @@
  */
 namespace PHPUnit\Framework\ClassMethodTest;
 
+use PHPUnit\Framework\ClassMethodTest\ParseInfo;
+
 class ClassParser
 {
     /**
@@ -20,35 +22,14 @@ class ClassParser
 
     /**
      *
-     * @var int
-     */
-    private static $startLine = null;
-
-    /**
-     *
-     * @var string
-     */
-    private static $className = null;
-
-    /**
-     *
-     * @var string
-     */
-    private static $classFilePath = null;
-
-    /**
-     *
      * @param string $className
      * @throws \PHPUnit_Framework_Exception
      */
     public function __construct($className)
     {
-        self::$startLine = null;
-        self::$className = $className;
+        ParseInfo::getInstance()->setTestClassName($className);
         $this->createReflectionClass($className);
-
-        self::$classFilePath = $this->class->getFileName();
-        
+        ParseInfo::getInstance()->setTestClassFilePath($this->class->getFileName());
         $this->fetchSourceLines();
     }
 
@@ -173,50 +154,12 @@ class ClassParser
         $startLine = $func->getStartLine() - 1;
         $endLine = $func->getEndLine();
         $length = $endLine - $startLine;
-        $this->setStartLine($startLine);
 
         $functionLines = array_slice($this->sourceLines, $startLine, $length);
         $functionLines[0] = $this->makeMethodPublic($functionLines[0]);
 
         $function = implode("", $functionLines);
         return $function;
-    }
-
-    /**
-     *
-     * @param int $startLine
-     */
-    private function setStartLine($startLine)
-    {
-        if (self::$startLine === null) {
-            self::$startLine = $startLine;
-        }
-//        if (isset(self::$startLines[$this->class->getName()])) {
-//            $existingLine = self::$startLines[$this->class->getName()];
-//            if ($startLine < $existingLine) {
-//                self::$startLines[$this->class->getName()] = $startLine;
-//            }
-//        } else {
-//            self::$startLines[$this->class->getName()] = $startLine;
-//        }
-    }
-
-    /**
-     *
-     * @return int
-     */
-    public static function getStartLine()
-    {
-        return self::$startLine;
-    }
-
-    /**
-     *
-     * @return string
-     */
-    public static function getClassName()
-    {
-        return self::$className;
     }
 
     /**
@@ -261,14 +204,5 @@ class ClassParser
             $constants[] = 'const ' . $name . ' = ' . $this->getPropValue($value) . ';';
         }
         return $constants;
-    }
-
-    /**
-     *
-     * @return string
-     */
-    public static function getClassFilePath()
-    {
-        return self::$classFilePath;
     }
 }

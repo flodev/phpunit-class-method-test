@@ -56,7 +56,6 @@ class TestListener implements \PHPUnit_Framework_TestListener
 
         if ($testResult->getCollectCodeCoverageInformation()) {
             $coverage = $testResult->getCodeCoverage();
-
             $methodTestCoverage = new MethodTestCoverage($coverage);
 
             if ($methodTestCoverage->hasCoverage()) {

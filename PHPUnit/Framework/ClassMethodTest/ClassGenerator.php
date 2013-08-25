@@ -9,6 +9,8 @@
 
 namespace PHPUnit\Framework\ClassMethodTest;
 
+use PHPUnit\Framework\ClassMethodTest\ParseInfo;
+
 class ClassGenerator
 {
     const CLASS_PREFIX = 'ClassMethodTest';
@@ -39,26 +41,11 @@ class ClassGenerator
 
     /**
      *
-     * @var string
-     */
-    private static $generatedClassName = null;
-
-    /**
-     *
-     * @var string
-     */
-    private static $classFilePath = null;
-
-    /**
-     *
      * @param \PHPUnit\Framework\ClassMethodTest\Build $build
      * @param \PHPUnit\Framework\ClassMethodTest\ClassParser $parser
      */
     public function __construct(Build $build, ClassParser $parser)
     {
-        self::$generatedClassName = null;
-        self::$classFilePath = null;
-
         $this->build = $build;
         $this->templateDir = $templateDir   = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'Template' .
                          DIRECTORY_SEPARATOR;
@@ -73,12 +60,13 @@ class ClassGenerator
                 . $this->parser->getReflection()->getShortName()
                 . substr(md5(microtime()), 0, 8);
 
-        self::$generatedClassName = '\\';
+        $generatedClassName = '\\';
 
         if ($this->parser->getNamespaceName() !== null) {
-            self::$generatedClassName.= $this->parser->getNamespaceName() . '\\';
+            $generatedClassName.= $this->parser->getNamespaceName() . '\\';
         }
-        self::$generatedClassName.= $this->classNameForTest;
+        $generatedClassName.= $this->classNameForTest;
+        ParseInfo::getInstance()->setGeneratedClassName($generatedClassName);
     }
 
     /**
@@ -147,7 +135,7 @@ class ClassGenerator
         fwrite($file, $code);
         $data = stream_get_meta_data($file);
         if (array_key_exists('uri', $data)) {
-            self::$classFilePath = $data['uri'];
+            ParseInfo::getInstance()->setGeneratedClassFilePath($data['uri']);
             return $data['uri'];
         }
         return '';
@@ -276,23 +264,5 @@ class ClassGenerator
     {
         $indentSpaces = 4;
         return str_pad('', $indentSpaces * $level);
-    }
-
-    /**
-     *
-     * @return string
-     */
-    public static function getGeneratedClassName()
-    {
-        return self::$generatedClassName;
-    }
-
-    /**
-     *
-     * @return string
-     */
-    public static function getClassFilePath()
-    {
-        return self::$classFilePath;
     }
 }

@@ -9,6 +9,7 @@ namespace PHPUnit\Framework\ClassMethodTest;
 use PHPUnit\Framework\ClassMethodTest\ClassParser;
 use PHPUnit\Framework\ClassMethodTest\ClassGenerator;
 use PHPUnit\Framework\ClassMethodTest\Build;
+use PHPUnit\Framework\ClassMethodTest\ParseInfo;
 
 class CodeCoverage
 {
@@ -33,7 +34,7 @@ class CodeCoverage
      */
     public function hasCoverage()
     {
-        return !empty($this->coverageData[ClassGenerator::getClassFilePath()]);
+        return !empty($this->coverageData[ParseInfo::getInstance()->getGeneratedClassFilePath()]);
     }
 
     /**
@@ -46,10 +47,11 @@ class CodeCoverage
             return array();
         }
 
-        $testData = $this->coverageData[ClassGenerator::getClassFilePath()];
+        $testData = $this->coverageData[ParseInfo::getInstance()->getGeneratedClassFilePath()];
 
         return array(
-            ClassParser::getClassFilePath() => $this->adaptTestData($testData, $this->getLineOffset())
+            ParseInfo::getInstance()->getTestClassFilePath() =>
+                $this->adaptTestData($testData, $this->getLineOffset())
         );
     }
 
@@ -78,7 +80,7 @@ class CodeCoverage
         $originalClassFirstLine = null;
         $firstMethod = null;
 
-        foreach (Build::getTestMethods() as $method) {
+        foreach (ParseInfo::getInstance()->getTestMethods() as $method) {
             $reflMethod = $originalClass->getMethod($method);
             if ($reflMethod->getStartLine() < $originalClassFirstLine || $originalClassFirstLine === null) {
                 $originalClassFirstLine = $reflMethod->getStartLine();
@@ -124,7 +126,7 @@ class CodeCoverage
     private function getOriginalClass()
     {
         try {
-            return new \ReflectionClass(ClassParser::getClassName());
+            return new \ReflectionClass(ParseInfo::getInstance()->getTestClassName());
         } catch (\ReflectionException $e) {
             throw new \PHPUnit_Framework_Exception('Test class is not available', null, $e);
         }
@@ -138,7 +140,7 @@ class CodeCoverage
     private function getGeneratedClass()
     {
         try {
-            return new \ReflectionClass(ClassGenerator::getGeneratedClassName());
+            return new \ReflectionClass(ParseInfo::getInstance()->getGeneratedClassName());
         } catch (\ReflectionException $e) {
             throw new \PHPUnit_Framework_Exception('Generated class is not available', null, $e);
         }
