@@ -18,11 +18,19 @@ class CodeCoverage
      */
     private $coverageData = null;
 
+    /**
+     *
+     * @param \PHP_CodeCoverage $coverage
+     */
     public function __construct(\PHP_CodeCoverage $coverage)
     {
         $this->coverageData = $coverage->getData();
     }
 
+    /**
+     *
+     * @return bool
+     */
     public function hasCoverage()
     {
         return !empty($this->coverageData[ClassGenerator::getClassFilePath()]);
@@ -108,6 +116,11 @@ class CodeCoverage
         return $newTestData;
     }
 
+    /**
+     *
+     * @return \ReflectionClass
+     * @throws \PHPUnit_Framework_Exception
+     */
     private function getOriginalClass()
     {
         try {
@@ -117,6 +130,11 @@ class CodeCoverage
         }
     }
 
+    /**
+     *
+     * @return \ReflectionClass
+     * @throws \PHPUnit_Framework_Exception
+     */
     private function getGeneratedClass()
     {
         try {
