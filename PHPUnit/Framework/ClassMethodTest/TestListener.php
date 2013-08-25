@@ -57,42 +57,25 @@ class TestListener implements \PHPUnit_Framework_TestListener
         if ($testResult->getCollectCodeCoverageInformation()) {
             $coverage = $testResult->getCodeCoverage();
 
-            $this->getCodeCoverageForClass($coverage);
+            $methodTestCoverage = new MethodTestCoverage($coverage);
 
-            MethodTestCoverage::getCoverage($coverage);
+            if ($methodTestCoverage->hasCoverage()) {
+                $coverage->start($test, false);
+                $testResult->getCodeCoverage()->append(
+                    $methodTestCoverage->getCoverage()
+                );
+                $coverage->stop();
+            }
 
-//            print_r($coverage->getData());
-//            exit;
-            $coverage->start($test, false);
-
-
-            $testResult->getCodeCoverage()->append(
-//                array('/Users/florian/projects/phpunit-class-method-test/PHPUnit/TestClass.php' =>
-//                    array(
-//                        26 => 1
-//                    )
-//                )
-                MethodTestCoverage::getCoverage($coverage)
-            );
-            $coverage->stop();
+            $this->deleteTmpFile();
         } else {
             echo "\n\n~~~~ " . __METHOD__ . " Run without xdebug ~~~~\n\n";
         }
     }
 
-    /**
-     *
-     * @param \PHP_CodeCoverage $coverage
-     * @return []
-     */
-    private function getCodeCoverageForClass(\PHP_CodeCoverage $coverage)
+    private function deleteTmpFile()
     {
-        $coverageData = $coverage->getData();
-        if (empty($coverageData[MethodTestCoverage::getFilePath()])) {
-            return array();
-        }
-
-        $coverage = $coverageData[MethodTestCoverage::getFilePath()];
+//        MethodTestCoverage::getFilePath();
     }
 
     public function startTestSuite(\PHPUnit_Framework_TestSuite $suite)

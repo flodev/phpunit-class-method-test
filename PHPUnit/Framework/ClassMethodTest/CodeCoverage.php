@@ -12,51 +12,83 @@ use PHPUnit\Framework\ClassMethodTest\Build;
 
 class CodeCoverage
 {
-    public static function getFilePath()
+    /**
+     *
+     * @var array
+     */
+    private $coverageData = null;
+
+    public function __construct(\PHP_CodeCoverage $coverage)
     {
-//        return ClassGenerator::getTestFilePath();
+        $this->coverageData = $coverage->getData();
     }
 
-    public static function getStartLine()
+    public function hasCoverage()
     {
-        return ClassParser::getStartLine();
+        return !empty($this->coverageData[ClassGenerator::getClassFilePath()]);
     }
 
-    public static function getCoverage(\PHP_CodeCoverage $coverage)
+    /**
+     *
+     * @return array
+     */
+    public function getCoverage()
     {
-        $data = $coverage->getData();
-
-        if (empty($data[ClassGenerator::getClassFilePath()])) {
+        if (!$this->hasCoverage()) {
             return array();
         }
-        $testData = $data[ClassGenerator::getClassFilePath()];
-        $methods = Build::getTestMethods();
-        $className = ClassParser::getClassName();
 
+        $testData = $this->coverageData[ClassGenerator::getClassFilePath()];
 
-        try {
-            $class = new \ReflectionClass($className);
-        } catch (\ReflectionException $e) {
-            throw new \PHPUnit_Framework_Exception('Test class is not available', null, $e);
-        }
+        return array(
+            ClassParser::getClassFilePath() => $this->adaptTestData($testData, $this->getLineOffset())
+        );
+    }
 
-        $smallestLine = null;
+    /**
+     *
+     * @return int
+     */
+    private function getLineOffset()
+    {
+        $originalClass = $this->getOriginalClass();
+        list($originalClassFirstLine, $firstMethod) = $this->getTestMethodData($originalClass);
+
+        $generatedClass = $this->getGeneratedClass();
+        $generatedClassFirstLine = $generatedClass->getMethod($firstMethod)->getStartLine();
+        $lineOffset = $originalClassFirstLine - $generatedClassFirstLine;
+        return $lineOffset;
+    }
+
+    /**
+     *
+     * @param \ReflectionClass $originalClass
+     * @return array
+     */
+    private function getTestMethodData(\ReflectionClass $originalClass)
+    {
+        $originalClassFirstLine = null;
         $firstMethod = null;
-        foreach ($methods as $method) {
-            $reflMethod = $class->getMethod($method);
-            if ($reflMethod->getStartLine() < $smallestLine || $smallestLine === null) {
-                $smallestLine = $reflMethod->getStartLine();
+
+        foreach (Build::getTestMethods() as $method) {
+            $reflMethod = $originalClass->getMethod($method);
+            if ($reflMethod->getStartLine() < $originalClassFirstLine || $originalClassFirstLine === null) {
+                $originalClassFirstLine = $reflMethod->getStartLine();
                 $firstMethod = $method;
             }
-            $reflMethod->getStartLine();
         }
 
+        return array($originalClassFirstLine, $firstMethod);
+    }
 
-        $generatedClass = new \ReflectionClass(ClassGenerator::getGeneratedClassName());
-        $startLine = $generatedClass->getMethod($firstMethod)->getStartLine();
-
-
-        $lineOffset = $smallestLine - $startLine;
+    /**
+     *
+     * @param array $testData
+     * @param int $lineOffset
+     * @return array
+     */
+    private function adaptTestData(array $testData, $lineOffset)
+    {
         $newTestData = array();
         $isConstructorSkipped = false;
         $lastLineNumber = null;
@@ -73,6 +105,24 @@ class CodeCoverage
             $newTestData[$lineNumber + $lineOffset] = count($callers) > 0 ? 1 : -1;
         }
 
-        return array(ClassParser::getClassFilePath() => $newTestData);
+        return $newTestData;
+    }
+
+    private function getOriginalClass()
+    {
+        try {
+            return new \ReflectionClass(ClassParser::getClassName());
+        } catch (\ReflectionException $e) {
+            throw new \PHPUnit_Framework_Exception('Test class is not available', null, $e);
+        }
+    }
+
+    private function getGeneratedClass()
+    {
+        try {
+            return new \ReflectionClass(ClassGenerator::getGeneratedClassName());
+        } catch (\ReflectionException $e) {
+            throw new \PHPUnit_Framework_Exception('Generated class is not available', null, $e);
+        }
     }
 }
