@@ -17,6 +17,6 @@ class BuildTest extends \PHPUnit_Framework_TestCase
                 ->create();
 
         $this->assertInstanceOf('\PHPUnit\Framework\ClassMethodTest\ClassProxy', $proxy);
-        $this->assertEquals('Im private', $proxy->createInstance()->privateFuncTest());
+        $this->assertEquals('Im private', $proxy->createInstance()->exec('privateFuncTest'));
     }
 }

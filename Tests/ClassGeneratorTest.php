@@ -14,7 +14,7 @@ class ClassGeneratorTest extends PHPUnit_Framework_TestCase
         $proxy = $generator->generateClass();
         $this->assertInstanceOf('PHPUnit\Framework\ClassMethodTest\ClassProxy', $proxy);
         $instance = $proxy->createInstance();
-        $this->assertEquals('hallo', $instance->method1());
+        $this->assertEquals('hallo', $proxy->createInstance()->exec('method1'));
     }
 
     private function getClassParserMock()
@@ -35,6 +35,7 @@ class ClassGeneratorTest extends PHPUnit_Framework_TestCase
         $classParser->expects($this->any())->method('getNamespace')->will($this->returnValue('namespace Testiii;'));
         $classParser->expects($this->any())->method('getShortName')->will($this->returnValue('NewTestClass'));
         $classParser->expects($this->any())->method('getReflection')->will($this->returnValue($testMock));
+        $classParser->expects($this->any())->method('getOrderedMethods')->will($this->returnValue(array('method1')));
         $classParser->expects($this->any())->method('extractConstants')->will($this->returnValue(array(
             'const TEST1 = "hallo";',
             'const TEST2 = "hallo";',

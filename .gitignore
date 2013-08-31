@@ -6,3 +6,5 @@ build/pdepend
 cache.properties
 *.sublime*
 .DS_Store
+
+/vendor/

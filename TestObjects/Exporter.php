@@ -61,7 +61,6 @@ class Exporter
     }
     private function exportNews()
     {
-        echo "muhu";
         $test = "neu";
         if (!$test) {
             $lulu = "muhu";
