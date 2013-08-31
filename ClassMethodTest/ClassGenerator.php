@@ -81,12 +81,13 @@ class ClassGenerator
         );
 
         $classTemplate->setVar(array(
+            'php_open' => $this->isCodeCoverageNeeded() ? '<?php' : '',
             'prologue' => 'class',
             'class_declaration' => $this->classNameForTest,
             'vars' => $this->getVars(),
             'methods' => $this->getMethods(),
             'namespace' => $this->parser->getNamespace(),
-            'constants' => $this->getConstants()
+            'constants' => $this->getConstants(),
         ));
 
 //        file_put_contents('/tmp/generatedClass.php', $classTemplate->render());

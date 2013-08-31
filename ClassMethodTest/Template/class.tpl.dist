@@ -1,4 +1,4 @@
-<?php
+{php_open}
 {namespace}
 
 {prologue} {class_declaration}
