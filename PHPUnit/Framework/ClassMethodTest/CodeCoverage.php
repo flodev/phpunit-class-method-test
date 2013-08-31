@@ -21,6 +21,12 @@ class CodeCoverage
 
     /**
      *
+     * @var \ReflectionClass
+     */
+    private $generatedClass = null;
+
+    /**
+     *
      * @param \PHP_CodeCoverage $coverage
      */
     public function __construct(\PHP_CodeCoverage $coverage)
@@ -34,7 +40,9 @@ class CodeCoverage
      */
     public function hasCoverage()
     {
-        return !empty($this->coverageData[ParseInfo::getInstance()->getGeneratedClassFilePath()]);
+        return !empty($this->coverageData[ParseInfo::getInstance()->getGeneratedClassFilePath()])
+               && class_exists(ParseInfo::getInstance()->getGeneratedClassName(), false)
+               && class_exists(ParseInfo::getInstance()->getTestClassName(), false);
     }
 
     /**
@@ -43,6 +51,8 @@ class CodeCoverage
      */
     public function getCoverage()
     {
+        $this->generatedClass = $this->getGeneratedClass();
+
         if (!$this->hasCoverage()) {
             return array();
         }
@@ -64,8 +74,7 @@ class CodeCoverage
         $originalClass = $this->getOriginalClass();
         list($originalClassFirstLine, $firstMethod) = $this->getTestMethodData($originalClass);
 
-        $generatedClass = $this->getGeneratedClass();
-        $generatedClassFirstLine = $generatedClass->getMethod($firstMethod)->getStartLine();
+        $generatedClassFirstLine = $this->generatedClass->getMethod($firstMethod)->getStartLine();
         $lineOffset = $originalClassFirstLine - $generatedClassFirstLine;
         return $lineOffset;
     }
@@ -102,8 +111,17 @@ class CodeCoverage
         $newTestData = array();
         $isConstructorSkipped = false;
         $lastLineNumber = null;
+        $lastLineOfGeneratedClass = $this->generatedClass->getEndLine();
 
         foreach ($testData as $lineNumber => $callers) {
+            # break coverage found in offset lines
+            if ($lineNumber > $lastLineOfGeneratedClass) {
+                break;
+            }
+            # skip 0 lines
+            if ($lineNumber === 0) {
+                continue;
+            }
             if (!$isConstructorSkipped) {
                 if ($lastLineNumber !== null && ($lineNumber - $lastLineNumber) > 1) {
                     $isConstructorSkipped = true;

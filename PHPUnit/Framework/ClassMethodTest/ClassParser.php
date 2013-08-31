@@ -173,7 +173,7 @@ class ClassParser
         try {
             return $this->class->getMethod($name);
         } catch (\ReflectionException $e) {
-            throw new \PHPUnit_Framework_Exception("Cannot copy method $name. Method does not exists.", null, $e);
+            throw new \PHPUnit_Framework_Exception("Cannot get method $name. Method does not exists.", null, $e);
         }
     }
 
@@ -191,6 +191,21 @@ class ClassParser
         $publicModifier = str_ireplace(array('private', 'protected'), 'public', $stringUntilFunction);
 
         return substr_replace($line, $publicModifier, 0, $functionPos);
+    }
+
+    /**
+     *
+     * @param array $methods
+     * @return array
+     */
+    public function getOrderedMethods($methods)
+    {
+        $orderedMethods = array();
+        foreach ($methods as $method) {
+            $orderedMethods[$this->getMethod($method)->getStartLine()] = $method;
+        }
+        ksort($orderedMethods);
+        return array_values($orderedMethods);
     }
 
     /**

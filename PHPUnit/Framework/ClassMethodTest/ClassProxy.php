@@ -5,6 +5,8 @@
 
 namespace PHPUnit\Framework\ClassMethodTest;
 
+use PHPUnit\Framework\ClassMethodTest\ParseInfo;
+
 class ClassProxy
 {
     /**
@@ -19,6 +21,11 @@ class ClassProxy
      */
     private $build = null;
 
+    /**
+     *
+     * @var Build
+     */
+    private $instance = null;
 
     public function __construct(\ReflectionClass $class, Build $build)
     {
@@ -33,9 +40,24 @@ class ClassProxy
     public function createInstance()
     {
         if ($this->build->hasClassPropertyMocks()) {
-            return $this->class->newInstanceArgs(array_values($this->build->get('propertyMocks')));
+            $this->instance = $this->class->newInstanceArgs(array_values($this->build->get('propertyMocks')));
         } else {
-            return $this->class->newInstance();
+            $this->instance = $this->class->newInstance();
         }
+        return $this;
+    }
+
+    /**
+     *
+     * @param string $methodname
+     * @param mixed $arguments
+     * @return mixed
+     */
+    public function exec($methodname)
+    {
+        $args = func_get_args();
+        array_shift($args);
+        ParseInfo::getInstance()->addCalledMethod($methodname);
+        return call_user_func_array(array($this->instance, $methodname), $args);
     }
 }

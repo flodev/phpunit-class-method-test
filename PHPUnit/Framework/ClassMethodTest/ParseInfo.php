@@ -42,6 +42,12 @@ class ParseInfo
      */
     private $testMethods = array();
 
+    /**
+     *
+     * @var array
+     */
+    private $calledMethods = array();
+
     private function __construct() {}
 
     private function __clone() {}
@@ -111,6 +117,16 @@ class ParseInfo
     public function setTestMethods(array $testMethods)
     {
         $this->testMethods = $testMethods;
+    }
+
+    public function getCalledMethods()
+    {
+        return $this->calledMethods;
+    }
+
+    public function addCalledMethod($calledMethod)
+    {
+        $this->calledMethods[] = $calledMethod;
     }
 
 

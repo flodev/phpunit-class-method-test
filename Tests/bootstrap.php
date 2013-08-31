@@ -6,7 +6,8 @@
 
 spl_autoload_register(function($class) {
     # cancel autoloading when its not a unit test or classMethodTest
-    if (false === strpos($class, 'ClassMethodTest') && 0 !== strpos($class, 'Tests')) {
+    if (false === strpos($class, 'ClassMethodTest') && 0 !== strpos($class, 'Tests')
+        && 0 !== strpos($class, 'TestObjects')) {
         return;
     }
 
@@ -34,5 +35,7 @@ spl_autoload_register(function($class) {
                 require_once $path;
             }
             break;
+        case 'TestObjects':
+            require_once realpath(__DIR__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . $classPath . '.php';
     }
 });

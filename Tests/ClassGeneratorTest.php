@@ -4,8 +4,7 @@ use PHPUnit\Framework\ClassMethodTest\ClassGenerator;
 
 class ClassGeneratorTest extends PHPUnit_Framework_TestCase
 {
-
-    public function testTest()
+    public function testGenerateNewClass()
     {
         $generator = new ClassGenerator(
             $this->getBuildMock(),
@@ -57,7 +56,7 @@ class ClassGeneratorTest extends PHPUnit_Framework_TestCase
                 }
 
                 if ($prop === 'propertyMocks') {
-                    return array('testMock' => "mock", 'testMock2' => 'mock');
+                    return array();
                 }
 
                 if ($prop === 'methods') {

@@ -46,4 +46,9 @@ class TestClass
         return 'Im protected static final';
     }
 
+    public function classProxyTest($arg1, $arg2)
+    {
+        return $arg1.$arg2;
+    }
+
 }

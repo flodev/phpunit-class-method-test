@@ -89,6 +89,8 @@ class ClassGenerator
             'constants' => $this->getConstants()
         ));
 
+        file_put_contents('/tmp/generatedClass.php', $classTemplate->render());
+
         if ($this->isCodeCoverageNeeded()) {
             $this->includeFile($this->createTestClass($classTemplate->render()));
         } else {
@@ -206,14 +208,16 @@ class ClassGenerator
      */
     private function getMethods()
     {
-        $methods = array();
-        $methods[] = $this->getConstructor();
+        $extractedMethods = array($this->getConstructor());
+        # assure that the methods in generated class are in the same order as in the test class
+        # important for code coverage
+        $methods = $this->parser->getOrderedMethods($this->build->get('methods'));
 
-        foreach ($this->build->get('methods') as $method) {
-            $methods[] = $this->parser->extractFunction($method);
+        foreach ($methods as $method) {
+            $extractedMethods[] = $this->parser->extractFunction($method);
         }
 
-        return implode('', $methods);
+        return implode('', $extractedMethods);
     }
 
     /**
