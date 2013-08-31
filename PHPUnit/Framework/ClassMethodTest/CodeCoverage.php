@@ -54,52 +54,18 @@ class CodeCoverage
      */
     public function getCoverage()
     {
-        $this->generatedClass = $this->getGeneratedClass();
-        $this->originalClass = $this->getOriginalClass();
-
         if (!$this->hasCoverage()) {
             return array();
         }
+        
+        $this->generatedClass = $this->getGeneratedClass();
+        $this->originalClass = $this->getOriginalClass();
 
         $testData = $this->coverageData[ParseInfo::getInstance()->getGeneratedClassFilePath()];
 
         return array(
-            ParseInfo::getInstance()->getTestClassFilePath() =>
-                $this->adaptTestData($testData, $this->getLineOffset())
+            ParseInfo::getInstance()->getTestClassFilePath() => $this->adaptTestData($testData)
         );
-    }
-
-    /**
-     *
-     * @return int
-     */
-    private function getLineOffset()
-    {
-        list($originalClassFirstLine, $firstMethod) = $this->getTestMethodData();
-
-        $generatedClassFirstLine = $this->generatedClass->getMethod($firstMethod)->getStartLine();
-        $lineOffset = $originalClassFirstLine - $generatedClassFirstLine;
-        return $lineOffset;
-    }
-
-    /**
-     *
-     * @return array
-     */
-    private function getTestMethodData()
-    {
-        $originalClassFirstLine = null;
-        $firstMethod = null;
-
-        foreach (ParseInfo::getInstance()->getTestMethods() as $method) {
-            $reflMethod = $this->originalClass->getMethod($method);
-            if ($reflMethod->getStartLine() < $originalClassFirstLine || $originalClassFirstLine === null) {
-                $originalClassFirstLine = $reflMethod->getStartLine();
-                $firstMethod = $method;
-            }
-        }
-
-        return array($originalClassFirstLine, $firstMethod);
     }
 
     /**
@@ -108,7 +74,7 @@ class CodeCoverage
      * @param int $lineOffset
      * @return array
      */
-    private function adaptTestData(array $testData, $lineOffset)
+    private function adaptTestData(array $testData)
     {
         $newTestData = array();
         $calledMethods = ParseInfo::getInstance()->getCalledMethods();
@@ -119,7 +85,7 @@ class CodeCoverage
             $generatedMethodEndLine = $reflMethod->getEndLine();
             $methodStartLine = $this->getOriginalMethod($calledMethod)->getStartLine();
 
-            for ($i = $generatedMethodStartLine; $i <= $generatedMethodEndLine; $i++,$methodStartLine++) {
+            for ($i = $generatedMethodStartLine; $i <= $generatedMethodEndLine; $i++, $methodStartLine++) {
                 if (!array_key_exists($i, $testData)) {
                     continue;
                 }
