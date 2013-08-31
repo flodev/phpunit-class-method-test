@@ -5,7 +5,7 @@
 
 namespace Tests;
 
-use PHPUnit\Framework\ClassMethodTest\ClassProxy;
+use ClassMethodTest\ClassProxy;
 
 require_once __DIR__ . '/../TestObjects/TestClass.php';
 
@@ -37,7 +37,7 @@ class ClassProxyTest extends \PHPUnit_Framework_TestCase
 
     private function getBuildMock($includePropertyMocks = false)
     {
-        $mock = $this->getMockBuilder('PHPUnit\Framework\ClassMethodTest\Build')
+        $mock = $this->getMockBuilder('ClassMethodTest\Build')
                 ->disableOriginalConstructor()
                 ->getMock();
 

@@ -1,6 +1,6 @@
 <?php
 
-use PHPUnit\Framework\ClassMethodTest\ClassGenerator;
+use ClassMethodTest\ClassGenerator;
 
 class ClassGeneratorTest extends PHPUnit_Framework_TestCase
 {
@@ -12,14 +12,14 @@ class ClassGeneratorTest extends PHPUnit_Framework_TestCase
         );
 
         $proxy = $generator->generateClass();
-        $this->assertInstanceOf('PHPUnit\Framework\ClassMethodTest\ClassProxy', $proxy);
+        $this->assertInstanceOf('ClassMethodTest\ClassProxy', $proxy);
         $instance = $proxy->createInstance();
         $this->assertEquals('hallo', $proxy->createInstance()->exec('method1'));
     }
 
     private function getClassParserMock()
     {
-        $classParser = $this->getMockBuilder('PHPUnit\Framework\ClassMethodTest\ClassParser')
+        $classParser = $this->getMockBuilder('ClassMethodTest\ClassParser')
                 ->disableOriginalConstructor()->getMock();
         $classParser->expects($this->any())->method('extractFunction')->will(
             $this->returnValue('
@@ -46,7 +46,7 @@ class ClassGeneratorTest extends PHPUnit_Framework_TestCase
 
     private function getBuildMock()
     {
-        $buildMock = $this->getMockBuilder('PHPUnit\Framework\ClassMethodTest\Build')
+        $buildMock = $this->getMockBuilder('ClassMethodTest\Build')
                 ->disableOriginalConstructor()->getMock();
 
         $buildMock->expects($this->any())->method('hasClassPropertyMocks')->will($this->returnValue(true));

@@ -3,9 +3,9 @@
  * @author Florian Biewald <f.biewald@gmail.com>
  */
 
-namespace PHPUnit\Framework\ClassMethodTest;
+namespace ClassMethodTest;
 
-use PHPUnit\Framework\ClassMethodTest\ClassGenerator;
+use ClassMethodTest\ClassGenerator;
 
 class Build
 {
@@ -49,7 +49,7 @@ class Build
     /**
      *
      * @param string $className
-     * @return \PHPUnit\Framework\ClassMethodTest\Build
+     * @return \ClassMethodTest\Build
      */
     public static function from($className)
     {
@@ -59,7 +59,7 @@ class Build
 
     /**
      *
-     * @return \PHPUnit\Framework\ClassMethodTest\ClassProxy
+     * @return \ClassMethodTest\ClassProxy
      */
     public function create()
     {
@@ -71,7 +71,7 @@ class Build
     /**
      *
      * @param string $method
-     * @return \PHPUnit\Framework\ClassMethodTest\Build
+     * @return \ClassMethodTest\Build
      */
     public function testMethod($method)
     {
@@ -81,7 +81,7 @@ class Build
 
     /**
      *
-     * @return \PHPUnit\Framework\ClassMethodTest\Build
+     * @return \ClassMethodTest\Build
      */
     public function copyAllProperties()
     {
@@ -93,7 +93,7 @@ class Build
      *
      * @param string $varName
      * @param object $mock
-     * @return \PHPUnit\Framework\ClassMethodTest\Build
+     * @return \ClassMethodTest\Build
      */
     public function mockClassProperty($varName, $mock)
     {

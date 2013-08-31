@@ -4,7 +4,7 @@
  */
 namespace Tests;
 
-use PHPUnit\Framework\ClassMethodTest\Build as BuildClassMethodTest;
+use ClassMethodTest\Build as BuildClassMethodTest;
 
 class ExporterTest extends \PHPUnit_Framework_TestCase
 {

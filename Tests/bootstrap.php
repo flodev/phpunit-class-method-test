@@ -16,7 +16,7 @@ spl_autoload_register(function($class) {
     $firstClassPart = substr($classPath, 0, strpos($classPath, DIRECTORY_SEPARATOR));
 
     switch ($firstClassPart) {
-        case 'PHPUnit':
+        case 'ClassMethodTest':
             $path = realpath(__DIR__)
                 . DIRECTORY_SEPARATOR
                 . '..' . DIRECTORY_SEPARATOR

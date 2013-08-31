@@ -3,9 +3,9 @@
  * @author Florian Biewald <f.biewald@gmail.com>
  *
  */
-namespace PHPUnit\Framework\ClassMethodTest;
+namespace ClassMethodTest;
 
-use PHPUnit\Framework\ClassMethodTest\CodeCoverage as MethodTestCoverage;
+use ClassMethodTest\CodeCoverage as MethodTestCoverage;
 
 class TestListener implements \PHPUnit_Framework_TestListener
 {

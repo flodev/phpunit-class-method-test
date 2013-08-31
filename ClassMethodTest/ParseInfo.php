@@ -2,7 +2,7 @@
 /**
  * @author Florian Biewald <f.biewald@gmail.com>
  */
-namespace PHPUnit\Framework\ClassMethodTest;
+namespace ClassMethodTest;
 
 class ParseInfo
 {
@@ -60,7 +60,7 @@ class ParseInfo
 
     /**
      *
-     * @return \PHPUnit\Framework\ClassMethodTest\ParseInfo
+     * @return \ClassMethodTest\ParseInfo
      */
     public static function getInstance()
     {

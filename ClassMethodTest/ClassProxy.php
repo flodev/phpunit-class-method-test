@@ -3,9 +3,9 @@
  * @author Florian Biewald <f.biewald@gmail.com>
  */
 
-namespace PHPUnit\Framework\ClassMethodTest;
+namespace ClassMethodTest;
 
-use PHPUnit\Framework\ClassMethodTest\ParseInfo;
+use ClassMethodTest\ParseInfo;
 
 class ClassProxy
 {

@@ -5,7 +5,7 @@
 
 namespace Tests;
 
-use PHPUnit\Framework\ClassMethodTest\ClassParser;
+use ClassMethodTest\ClassParser;
 
 require_once __DIR__ . '/../TestObjects/TestClass.php';
 

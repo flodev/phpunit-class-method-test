@@ -5,7 +5,7 @@
 
 namespace Tests;
 
-use PHPUnit\Framework\ClassMethodTest\ParseInfo;
+use ClassMethodTest\ParseInfo;
 
 class ParseInfoTest extends \PHPUnit_Framework_TestCase
 {

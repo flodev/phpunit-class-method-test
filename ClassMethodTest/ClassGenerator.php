@@ -7,9 +7,9 @@
  * - test without constructor
  */
 
-namespace PHPUnit\Framework\ClassMethodTest;
+namespace ClassMethodTest;
 
-use PHPUnit\Framework\ClassMethodTest\ParseInfo;
+use ClassMethodTest\ParseInfo;
 
 class ClassGenerator
 {
@@ -41,8 +41,8 @@ class ClassGenerator
 
     /**
      *
-     * @param \PHPUnit\Framework\ClassMethodTest\Build $build
-     * @param \PHPUnit\Framework\ClassMethodTest\ClassParser $parser
+     * @param \ClassMethodTest\Build $build
+     * @param \ClassMethodTest\ClassParser $parser
      */
     public function __construct(Build $build, ClassParser $parser)
     {
@@ -71,7 +71,7 @@ class ClassGenerator
 
     /**
      *
-     * @return \PHPUnit\Framework\ClassMethodTest\ClassProxy
+     * @return \ClassMethodTest\ClassProxy
      * @throws \PHPUnit_Framework_Exception
      */
     public function generateClass()
@@ -122,7 +122,7 @@ class ClassGenerator
      */
     private function isCodeCoverageNeeded()
     {
-        return class_exists('\PHPUnit\Framework\ClassMethodTest\TestListener', false) && xdebug_is_enabled();
+        return class_exists('\ClassMethodTest\TestListener', false) && xdebug_is_enabled();
     }
 
     /**

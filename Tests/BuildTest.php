@@ -4,7 +4,7 @@ namespace Tests;
 
 require_once __DIR__ . '/../TestObjects/TestClass.php';
 
-use PHPUnit\Framework\ClassMethodTest\Build as BuildClassMethodTest;
+use ClassMethodTest\Build as BuildClassMethodTest;
 
 class BuildTest extends \PHPUnit_Framework_TestCase
 {
@@ -16,7 +16,7 @@ class BuildTest extends \PHPUnit_Framework_TestCase
                 ->mockClassProperty('test', $this->getMock('TestClass'))
                 ->create();
 
-        $this->assertInstanceOf('\PHPUnit\Framework\ClassMethodTest\ClassProxy', $proxy);
+        $this->assertInstanceOf('\ClassMethodTest\ClassProxy', $proxy);
         $this->assertEquals('Im private', $proxy->createInstance()->exec('privateFuncTest'));
     }
 }
