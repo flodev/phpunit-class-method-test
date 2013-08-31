@@ -18,8 +18,8 @@ class ExporterTest extends \PHPUnit_Framework_TestCase
                 ->create();
 
         $proxy->createInstance();
-        $proxy->exec('exportImages');
         $proxy->exec('exportNews');
+        $proxy->exec('exportImages');
     }
 
     private function getDbMock()

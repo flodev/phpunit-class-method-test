@@ -48,6 +48,12 @@ class ParseInfo
      */
     private $calledMethods = array();
 
+    /**
+     *
+     * @var array
+     */
+    private $methodStartLines = array();
+
     private function __construct() {}
 
     private function __clone() {}
@@ -129,5 +135,13 @@ class ParseInfo
         $this->calledMethods[] = $calledMethod;
     }
 
+    public function getMethodStartLines()
+    {
+        return $this->methodStartLines;
+    }
 
+    public function setMethodStartLine($method, $startLine)
+    {
+        $this->methodStartLines[$method] = $startLine;
+    }
 }

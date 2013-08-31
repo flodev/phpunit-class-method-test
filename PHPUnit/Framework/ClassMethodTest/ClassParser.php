@@ -151,6 +151,7 @@ class ClassParser
     public function extractFunction($name)
     {
         $func = $this->getMethod($name);
+        ParseInfo::getInstance()->setMethodStartLine($name, $func->getStartLine());
         $startLine = $func->getStartLine() - 1;
         $endLine = $func->getEndLine();
         $length = $endLine - $startLine;

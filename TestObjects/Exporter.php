@@ -63,6 +63,9 @@ class Exporter
     {
         echo "muhu";
         $test = "neu";
+        if (!$test) {
+            $lulu = "muhu";
+        }
         # haloo
     }
 
