@@ -12,6 +12,7 @@
             "email": "f.biewald@googlemail.com"
         }
     ],
+    "license": "MIT",
     "autoload": {
         "psr-0": {
             "ClassMethodTest\\": "."
