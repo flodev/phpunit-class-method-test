@@ -89,7 +89,7 @@ class ClassGenerator
             'constants' => $this->getConstants()
         ));
 
-        file_put_contents('/tmp/generatedClass.php', $classTemplate->render());
+//        file_put_contents('/tmp/generatedClass.php', $classTemplate->render());
 
         if ($this->isCodeCoverageNeeded()) {
             $this->includeFile($this->createTestClass($classTemplate->render()));
