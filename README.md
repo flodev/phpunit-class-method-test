@@ -66,12 +66,10 @@ Use code coverage
 
 add TestListener to your phpunit.xml
 
-<pre><code>
-<phpunit>
-    <listeners>
-        <listener class="\ClassMethodTest\TestListener">
-        </listener>
-    </listeners>
-</phpunit>
-</code></pre>
+    <phpunit>
+        <listeners>
+            <listener class="\ClassMethodTest\TestListener">
+            </listener>
+        </listeners>
+    </phpunit>
 
