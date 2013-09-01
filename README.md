@@ -44,6 +44,28 @@ link phpunit as an executable
 
 <b>Install to existing PHPUnit installation</b>
 
-find phpunit
-    which phpunit
+You can use the autoloader delivered with this package.
+Add a line to your phpunit bootstrap.php
 
+assuming the following structure
+-- phpunit-class-method-test/autoloader.php
+-- your-project/bootstrap.php
+
+it should be
+<pre><code>
+require_once __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'phpunit-class-method-test' . DIRECTORY_SEPARATOR . 'autoloader.php';
+</code></pre>
+
+Use code coverage
+----
+
+add TestListener to your phpunit.xml
+
+<pre><code>
+<phpunit>
+    <listeners>
+        <listener class="\ClassMethodTest\TestListener">
+        </listener>
+    </listeners>
+</phpunit>
+</code></pre>
