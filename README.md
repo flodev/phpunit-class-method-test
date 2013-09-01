@@ -56,6 +56,11 @@ it should be
 require_once __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'phpunit-class-method-test' . DIRECTORY_SEPARATOR . 'autoloader.php';
 </code></pre>
 
+Usage
+----
+Take a look at the unit tests shipped with this package. Especially the ExporterTest.php and BuildTest.php
+picture the usage of ClassMethodTest.
+
 Use code coverage
 ----
 
@@ -69,3 +74,4 @@ add TestListener to your phpunit.xml
     </listeners>
 </phpunit>
 </code></pre>
+
