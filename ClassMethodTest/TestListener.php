@@ -28,12 +28,6 @@ class TestListener implements \PHPUnit_Framework_TestListener
         if (empty($testResult)) {
             return;
         }
-        /**
-         * @todo decide whether xdebug is used and testlistener is registered,
-         * then use tmp file instead of eval
-         * cleanup tmp file in test listener ... ?
-         */
-
 
         if ($testResult->getCollectCodeCoverageInformation()) {
             $coverage = $testResult->getCodeCoverage();
